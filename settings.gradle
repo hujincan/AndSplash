@@ -1,0 +1,4 @@
+include ':model'
+include ':shared'
+include ':app'
+rootProject.name = "AndSplash"

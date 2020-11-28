@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.hello.WelcomeFragment">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.bubbble.andsplash.ui.hello.HelloViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/onboarding_margins" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/onboarding_margins" />
+
+        <Button
+            android:id="@+id/button_signin"
+            style="?borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_small"
+            android:onClick="@{() -> viewModel.onSigninClicked()}"
+            android:text="登录"
+            app:goneUnless="@{!viewModel.observeSignedInUser}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/io_hashtag"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fitsSystemWindows="true"
+            android:importantForAccessibility="no"
+            app:layout_constraintBottom_toTopOf="@id/welcome_during_message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_signin"
+            app:layout_constraintVertical_chainStyle="spread_inside"
+            app:srcCompat="@drawable/onboarding_camera" />
+
+        <TextView
+            android:id="@+id/welcome_during_message"
+            style="@style/Widget.IOSched.OnboardingText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_normal"
+            android:text="使用“镜头”记录任何事情"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@id/date_location"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/io_hashtag" />
+
+        <TextView
+            android:id="@+id/date_location"
+            style="@style/Widget.IOSched.OnboardingText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="每张照片都有它的故事"
+            android:textColor="?android:textColorSecondary"
+            android:textAppearance="@style/TextAppearance.IOSched.ListPrimary"
+            app:layout_constraintBottom_toTopOf="@id/spacer"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/welcome_during_message" />
+
+        <Space
+            android:id="@+id/spacer"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/onboarding_actions_height"
+            android:layout_marginTop="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date_location" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

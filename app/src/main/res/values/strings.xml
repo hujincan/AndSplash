@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">镜头飞溅</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="title_info">信息</string>
+    <string name="filters">过滤条件</string>
+    <string name="settings_title">设置</string>
+
+    <string name="nav_news">最新</string>
+    <string name="nav_album">图集</string>
+    <string name="nav_personal">个人</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dialog_sign_in_content">登录即可保存活动、预约席位并为会议评分（如果是会议参加者）。系统将通过您的帐号同步在应用和网站中执行的操作。</string>
+    <string name="dialog_sign_out_content">所有已保存的活动、席位预约和会议评分（如果是会议参加者）都会持续同步到您的帐号中。</string>
+
+    <string name="tos_url" translatable="false">https://policies.google.com/terms</string>
+    <string name="privacy_policy_url" translatable="false">https://policies.google.com/privacy</string>
+    <string name="oss_file" translatable="false">file:///android_asset/licenses.html</string>
+
+    <string name="manage_google_account_url" translatable="false">https://myaccount.google.com/</string>
+
+    <string name="firebase_auth_no_network_connection">未连接到互联网</string>
+    <string name="firebase_auth_unknown_error">未知错误</string>
+    <string name="a11y_signed_in_content_description">目前登录的帐号是 %s。</string>
+    <string name="a11y_signed_out_content_description">点按即可登录。</string>
+    <string name="settings_tos">服务条款</string>
+    <string name="settings_privacy_policy">隐私权政策</string>
+    <string name="settings_oss_licenses">开放源代码许可</string>
+    <string name="settings_theme_title">选择主题背景</string>
+    <string name="settings_theme_system">系统默认</string>
+    <string name="settings_theme_light">浅色</string>
+    <string name="settings_theme_dark">深色</string>
+    <string name="settings_theme_battery">根据省电模式设置</string>
+    <string name="sign_out">退出帐号</string>
+    <string name="manage_google_account">管理您的 Google 帐号</string>
+    <string name="welcome">欢迎！</string>
+    <string name="sign_in">登录</string>
+    <string name="cancel">取消</string>
+    <string name="remove">移除</string>
+</resources>
