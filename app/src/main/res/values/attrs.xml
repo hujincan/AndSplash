@@ -93,4 +93,25 @@
         <attr name="android:drawable" />
         <attr name="margin" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="CircleImageView">
+        <attr name="strokeWidth" format="dimension" />
+    </declare-styleable>
+
+    <!-- AvatarImageBehavior -->
+    <declare-styleable name="AvatarBehavior">
+        <attr name="finalYyPosition" format="dimension" />
+        <attr name="startXxPosition" format="dimension" />
+        <attr name="startToolbarPositions" format="dimension" />
+        <attr name="startHeights" format="dimension" />
+        <attr name="finalHeights" format="dimension" />
+        <attr name="finalSize" format="dimension" />
+        <attr name="finalXx" format="dimension" />
+        <attr name="toolBarHeight" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="FilletImageView">
+        <attr name="radius" format="dimension" />
+    </declare-styleable>
+
 </resources>

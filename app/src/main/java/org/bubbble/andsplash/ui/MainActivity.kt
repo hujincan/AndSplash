@@ -1,5 +1,6 @@
 package org.bubbble.andsplash.ui
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -16,10 +17,10 @@ import kotlinx.coroutines.launch
 import org.bubbble.andsplash.R
 import org.bubbble.andsplash.databinding.ActivityMainBinding
 import org.bubbble.andsplash.shared.result.EventObserver
-import org.bubbble.andsplash.ui.settings.SettingsFragment
+import org.bubbble.andsplash.ui.personal.PersonalFragment
+import org.bubbble.andsplash.ui.pictures.PictureFragment
 import org.bubbble.andsplash.ui.signin.SignInDialogFragment
 import org.bubbble.andsplash.ui.signin.SignOutDialogFragment
-import org.bubbble.andsplash.util.navigationItemBackground
 
 
 @AndroidEntryPoint
@@ -32,15 +33,15 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         private const val NAV_ID_NONE = -1
 
         private val INFO_TITLES = arrayOf(
-            R.id.nav_news,
-            R.id.nav_album,
-            R.id.nav_personal
+            R.string.nav_news,
+            R.string.nav_album,
+            R.string.nav_personal
         )
 
         private val INFO_PAGES = arrayOf(
-            { SettingsFragment() },
-            { SettingsFragment() },
-            { SettingsFragment() }
+            { PictureFragment() },
+            { PictureFragment() },
+            { PersonalFragment() }
         )
 
         const val NEWS = 0
@@ -91,8 +92,33 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             override fun onPageScrolled(position: Int, offset: Float, offsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
                 binding.navigation.menu.getItem(position).isChecked = true
+                if (position == PERSONAL) {
+                    toggleSearch(false)
+                } else {
+                    toggleSearch(true)
+                }
             }
         })
+    }
+
+    private fun toggleSearch(isShow: Boolean){
+        binding.searchBox.root.run {
+            if (isShow) {
+                ObjectAnimator.ofFloat(
+                    this,
+                    "translationY",
+                    0f - (this.height + this.height + this.paddingBottom).toFloat(),
+                    0f
+                ).setDuration(200).start()
+            } else {
+                ObjectAnimator.ofFloat(
+                    this,
+                    "translationY",
+                    0f,
+                    0f - (this.height + this.height + this.paddingBottom).toFloat()
+                ).setDuration(200).start()
+            }
+        }
     }
 
     /**

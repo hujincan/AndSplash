@@ -27,6 +27,7 @@
         <item name="textAppearanceBody2">@style/TextAppearance.IOSched.Body2</item>
         <item name="textAppearanceButton">@style/TextAppearance.IOSched.Button</item>
         <item name="textAppearanceListItem">@style/TextAppearance.IOSched.ListPrimary</item>
+        <item name="android:fontFamily">@font/google_sans</item>
 
         <!-- Dialogs -->
         <item name="materialAlertDialogTheme">@style/AlertDialog.Theme</item>

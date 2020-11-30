@@ -15,6 +15,9 @@
     <string name="nav_album">图集</string>
     <string name="nav_personal">个人</string>
 
+    <string name="shot">镜头</string>
+    <string name="favorite">喜爱</string>
+
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->

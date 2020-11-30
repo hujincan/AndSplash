@@ -25,4 +25,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include android:id="@+id/search_box"
+        layout="@layout/home_search_box"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

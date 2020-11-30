@@ -30,6 +30,9 @@
     <color name="wifi_card_background">#263238</color>
     <color name="event_card_header_background">@color/event_card_header_background_dark</color>
     <color name="list_divider">#1fffffff</color>
+    <color name="stroke_color">#5F6368</color>
+
+    <color name="icon_tint">#9AA0A6</color>
 
     <item name="chip_bg_alpha_checked" format="float" type="dimen">0.27</item>
 </resources>
