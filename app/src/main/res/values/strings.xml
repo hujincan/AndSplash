@@ -17,6 +17,7 @@
 
     <string name="shot">镜头</string>
     <string name="favorite">喜爱</string>
+    <string name="user">用户</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
@@ -49,4 +50,13 @@
     <string name="sign_in">登录</string>
     <string name="cancel">取消</string>
     <string name="remove">移除</string>
+    <string name="title_activity_preview">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+
+    <string name="behavior_rv">org.bubbble.andsplash.base.behavior.SlideDownShowRVBehavior</string>
+    <string name="behavior_head_pin">org.bubbble.andsplash.base.behavior.HeadPinBehavior</string>
+
+    <string name="shared_element_search_box">shared_element_container_search_box</string>
 </resources>

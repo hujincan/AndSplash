@@ -6,11 +6,9 @@
     android:layout_marginStart="@dimen/margin_normal"
     android:layout_marginEnd="@dimen/margin_normal"
     android:layout_marginTop="@dimen/margin_small"
+    android:transitionName="@string/shared_element_search_box"
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout

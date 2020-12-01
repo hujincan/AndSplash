@@ -38,10 +38,10 @@ class PictureFragment : Fragment() {
             intent.putExtra("photo", it)
             startActivity(intent)
         }
-        val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
-//        binding.photosList.layoutManager = LinearLayoutManager(context)
-        binding.photosList.layoutManager = layoutManager
+//        val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+//        layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+        binding.photosList.layoutManager = LinearLayoutManager(context)
+//        binding.photosList.layoutManager = layoutManager
         binding.photosList.adapter = adapter
         adapter.submitList(mutableListOf<PictureItem>().apply {
             add(PictureItem(R.drawable.photo_1))

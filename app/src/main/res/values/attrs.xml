@@ -45,7 +45,7 @@
         <attr name="android:textColor" />
         <attr name="android:textSize" />
         <attr name="android:fontFamily" />
-        <attr name="verticalBias"/>
+        <attr name="verticalBias" />
     </declare-styleable>
 
     <declare-styleable name="ReserveButton">
@@ -112,6 +112,10 @@
 
     <declare-styleable name="FilletImageView">
         <attr name="radius" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="FullscreenAttrs">
+        <attr name="fullscreenBackgroundColor" format="color" />
+        <attr name="fullscreenTextColor" format="color" />
     </declare-styleable>
 
 </resources>

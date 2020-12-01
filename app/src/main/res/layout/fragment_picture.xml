@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    android:paddingTop="@dimen/top_padding"
+    android:paddingTop="@dimen/margin_small"
     android:paddingStart="@dimen/margin_small"
     android:paddingEnd="@dimen/margin_small"
     tools:context=".ui.pictures.PictureFragment">

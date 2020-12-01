@@ -17,7 +17,7 @@ import org.bubbble.andsplash.util.load
  */
 internal class PictureAdapter(private val onClick: ((Int) -> Unit)?) : ListAdapter<PictureItem, ViewHolder>(PictureDiffCallback) {
 
-    private val viewLayout = ViewType.GRID
+    private val viewLayout = ViewType.LIST
 
     enum class ViewType {
         GRID,
