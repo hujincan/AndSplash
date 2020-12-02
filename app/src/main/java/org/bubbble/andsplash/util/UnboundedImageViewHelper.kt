@@ -1,4 +1,4 @@
-package org.bubbble.andsplash.util
+package org.bubbble.iconandkit.util
 
 import android.annotation.SuppressLint
 import android.graphics.Matrix
@@ -41,12 +41,27 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
     /**
      * View的高宽度
      */
-    private var viewWidth = 0
+    private var viewWidth = 0F
 
     /**
      * View的高度
      */
-    private var viewHeight = 0
+    private var viewHeight = 0F
+
+    /**
+     * 图像的高宽度
+     */
+    private var rectWidth = 0F
+
+    /**
+     * 图像的高度
+     */
+    private var rectHeight = 0F
+
+    /**
+     * 图像的高度
+     */
+    private lateinit var initialRect: RectF
 
     /**
      * 另一个点
@@ -95,10 +110,13 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
 
     init {
         imageView.post {
-            viewWidth = imageView.width - imageView.paddingLeft - imageView.paddingEnd
-            viewHeight = imageView.height - imageView.paddingTop - imageView.paddingBottom
+            viewWidth = (imageView.width - imageView.paddingLeft - imageView.paddingEnd).toFloat()
+            viewHeight = (imageView.height - imageView.paddingTop - imageView.paddingBottom).toFloat()
             suppMatrix = Matrix(imageView.imageMatrix)
-            fitCenter()
+            imageView.scaleType = ImageView.ScaleType.MATRIX
+            imageView.imageMatrix = getDrawMatrix()
+//            notifyImageChange(1F, 0f, 0f)
+            centerCrop()
         }
     }
 
@@ -114,40 +132,11 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
         }
     }
 
-    private fun fitCenter() : Boolean {
-
+    private fun centerCrop() : Boolean {
         val rect = getDisplayRect(getDrawMatrix()) ?: return false
-        val height = rect.height()
-        val width = rect.width()
-
-        val moveX = (width.coerceAtMost(viewWidth.toFloat()) - width.coerceAtLeast(viewWidth.toFloat())) / 2
-        val moveY = (height.coerceAtMost(viewHeight.toFloat()) - height.coerceAtLeast(viewHeight.toFloat())) / 2
-        Log.e("scaleFactor", "moveX: $moveX viewWidth: $viewWidth width2: $width moveY $moveY")
-        suppMatrix.postTranslate(moveX, moveY)
-
-        val scaleFactor: Float
-        scaleFactor = if ((viewWidth - width) > (viewHeight - height)) {
-            Log.e("scaleFactor", "width")
-            if (viewWidth - width < 0) {
-                viewWidth / width
-            } else {
-                viewWidth / width
-            }
-        } else {
-            Log.e("scaleFactor", "height")
-            if (viewHeight - height < 0) {
-                viewHeight / height
-            } else {
-                viewHeight / height
-            }
-        }
-
-        Log.e("scaleFactor", "$scaleFactor")
-        suppMatrix.postScale(scaleFactor, scaleFactor, viewWidth / 2F, viewHeight / 2F)
-        imageView.scaleType = ImageView.ScaleType.MATRIX
-        imageView.imageMatrix = getDrawMatrix()
-
-//        imageView.visibility = View.VISIBLE
+        initialRect = RectF(rect)
+        rectHeight = rect.height()
+        rectWidth = rect.width()
 
         return true
     }
@@ -161,33 +150,44 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
         val height = rect.height()
         val width = rect.width()
 
+//        view比 > 1 & rect比 < view比 ->（上下）
+//        view比 < 1 & rect比 < view比 ->（上下）
+
+//        view比 > 1 & rect比 > view比 ->（左右）
+//        view比 < 1 & rect比 > view比 ->（左右）
+        val viewScale = viewWidth / viewHeight
+        val rectScale = rect.width() / rect.height()
+
         var moveX = offset.x - recordPointF.x
         var moveY = offset.y - recordPointF.y
 
-
-//        view比 > 1 & rect比 > view比 ->（上下）
-//        view比 < 1 & rect比 > view比 ->（上下）
-
-//        view比 > 1 & rect比 < view比 ->（左右）
-//        view比 < 1 & rect比 < view比 ->（左右）
-        val viewScale = viewWidth.toFloat() / viewHeight.toFloat()
-        val rectScale = rect.width() / rect.height()
-
-        logger("viewScale: $viewScale   rectScale: $rectScale")
+        logger("initialRect: left: ${initialRect.left} top: ${initialRect.top} right: ${initialRect.right} bottom: ${initialRect.bottom}")
 
         if (rectScale < viewScale) {
-            if (rect.left + moveX > 0){
-                moveX = 0 - rect.left
-            }else if (rect.right + moveX < viewWidth){
-                moveX = viewWidth - rect.right
+            if (rect.top + moveY > 0 ) {
+                moveY = 0 - rect.top
+            }else if (rect.bottom + moveY < rectHeight) {
+                moveY = rectHeight - rect.bottom
+            }
+        } else {
+            if (rect.top + moveY > initialRect.top ) {
+                moveY = initialRect.top - rect.top
+            }else if (rect.bottom + moveY < initialRect.bottom) {
+                moveY = initialRect.bottom - rect.bottom
             }
         }
 
         if (rectScale > viewScale) {
-            if (rect.top + moveY > 0 ) {
-                moveY = 0 - rect.top
-            }else if (rect.bottom + moveY < viewHeight) {
-                moveY = viewHeight - rect.bottom
+            if (rect.left + moveX > 0){
+                moveX = 0 - rect.left
+            }else if (rect.right + moveX < rectWidth){
+                moveX = rectWidth - rect.right
+            }
+        } else {
+            if (rect.left + moveX > initialRect.left){
+                moveX = initialRect.left - rect.left
+            }else if (rect.right + moveX < initialRect.right){
+                moveX = initialRect.right - rect.right
             }
         }
 
@@ -198,13 +198,10 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
         // 缩小
         if (scaleFactor < 1F) {
             // 如果两个对边都已经到达View边界，那么不执行缩小
-
-            if (rectScale < viewScale && rect.top == 0F && rect.bottom == viewHeight.toFloat()) return true
-
-            if (rectScale > viewScale && rect.left == 0F && rect.right == viewWidth.toFloat()) return true
+            if (rect.top == 0F && rect.bottom == rectHeight || rect.left == 0F && rect.right == rectWidth) return true
 
             // 是否可以缩小
-            if ((rectScale > viewScale && width * scaleFactor > viewWidth) || (rectScale < viewScale && height * scaleFactor > viewHeight)) {
+            if (width * scaleFactor > rectWidth && height * scaleFactor > rectHeight) {
                 suppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY)
 
                 imageView.scaleType = ImageView.ScaleType.MATRIX

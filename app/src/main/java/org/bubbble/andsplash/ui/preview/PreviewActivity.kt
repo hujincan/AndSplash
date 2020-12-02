@@ -2,16 +2,24 @@ package org.bubbble.andsplash.ui.preview
 
 import androidx.appcompat.app.AppCompatActivity
 import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Button
+import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import org.bubbble.andsplash.R
 import org.bubbble.andsplash.databinding.ActivityPreviewBinding
-import org.bubbble.andsplash.util.load
-import org.bubbble.andsplash.util.UnboundedImageViewHelper
+import org.bubbble.iconandkit.util.UnboundedImageViewHelper
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -64,7 +72,42 @@ class PreviewActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
+
+        // 展开状态使用状态栏和导航栏暗色
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+                    or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        or View.SYSTEM_UI_FLAG_VISIBLE
+                        or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+            } else {
+                window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        or View.SYSTEM_UI_FLAG_VISIBLE)
+            }
+        }
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.WHITE
+
+        //API支持就更改Android NavigationBar Color
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            window.navigationBarColor = ContextCompat.getColor(this, R.color.white)
+        }else{
+            window.navigationBarColor = Color.BLACK
+        }
+
         super.onCreate(savedInstanceState)
+
         binding = ActivityPreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -73,11 +116,23 @@ class PreviewActivity : AppCompatActivity() {
 
         val picture = intent.getIntExtra("photo", R.drawable.photo_3)
         binding.run {
-            photo.load(picture)
-            UnboundedImageViewHelper.with(photo).addClickListener(object : UnboundedImageViewHelper.ClickListener {
-                override fun onClick(view: View, count: Int) {
-                    toggle()
+            Glide.with(photo).load(picture).into(object : CustomTarget<Drawable>() {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    photo.setImageDrawable(resource)
+                    UnboundedImageViewHelper.with(photo).addClickListener(object : UnboundedImageViewHelper.ClickListener {
+                        override fun onClick(view: View, count: Int) {
+                            toggle()
+                        }
+                    })
                 }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+
+                }
+
             })
         }
 

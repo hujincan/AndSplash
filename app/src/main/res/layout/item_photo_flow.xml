@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.bubbble.andsplash.widget.FilletImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/photos_image"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_small"
+    android:layout_marginBottom="@dimen/margin_small"
+    android:layout_marginEnd="@dimen/margin_small"
+    android:layout_marginStart="@dimen/margin_small"
+    android:adjustViewBounds="true"
+    tools:src="@drawable/photo_3">
+</org.bubbble.andsplash.widget.FilletImageView>

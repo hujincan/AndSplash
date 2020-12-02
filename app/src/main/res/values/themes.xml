@@ -66,7 +66,7 @@
         <item name="sessionListKeyline">@dimen/margin_normal</item>
     </style>
 
-    <style name="AppTheme.PopupTheme" parent="ThemeOverlay.IOSched.Light" />
+    <style name="AppTheme.PopupTheme" parent="ThemeOverlay.IOSched.Light"/>
 
     <style name="AlertDialog.Theme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="alertDialogStyle">@style/AlertDialog.Style</item>

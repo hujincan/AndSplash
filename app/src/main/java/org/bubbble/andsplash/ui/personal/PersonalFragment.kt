@@ -1,10 +1,12 @@
 package org.bubbble.andsplash.ui.personal
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.*
+import android.widget.PopupWindow
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.appbar.AppBarLayout
@@ -13,6 +15,7 @@ import org.bubbble.andsplash.databinding.FragmentPersonalBinding
 import org.bubbble.andsplash.databinding.ItemTabCountBinding
 import org.bubbble.andsplash.shared.util.logger
 import org.bubbble.andsplash.ui.pictures.PictureFragment
+import org.bubbble.andsplash.ui.settings.SettingsActivity
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -50,15 +53,45 @@ class PersonalFragment : Fragment() {
 
             appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 logger("appbar: ${(abs(verticalOffset) / appBarLayout.totalScrollRange.toFloat())}")
-                toolbarTitle.alpha = 1F - min(1F, (abs(verticalOffset) / appBarLayout.totalScrollRange.toFloat()) * 2)
-                name.alpha = 1F - min(1F, (abs(verticalOffset) / appBarLayout.totalScrollRange.toFloat()) * 2)
-                accountName.alpha = 1F - min(1F, (abs(verticalOffset) / appBarLayout.totalScrollRange.toFloat()) * 2)
+                toolbarTitle.alpha = 1F - min(
+                    1F,
+                    (abs(verticalOffset) / appBarLayout.totalScrollRange.toFloat()) * 2
+                )
+                name.alpha = 1F - min(
+                    1F,
+                    (abs(verticalOffset) / appBarLayout.totalScrollRange.toFloat()) * 2
+                )
+                accountName.alpha = 1F - min(
+                    1F,
+                    (abs(verticalOffset) / appBarLayout.totalScrollRange.toFloat()) * 2
+                )
             })
+
+            menu.setOnClickListener {
+                val popupMenu = PopupMenu(menu.context, menu, Gravity.END, 0, R.style.MyPopupMenu)
+                popupMenu.menuInflater.inflate(R.menu.menu_main, popupMenu.menu)
+                popupMenu.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.action_settings -> startActivity(
+                            Intent(
+                                context,
+                                SettingsActivity::class.java
+                            )
+                        )
+                    }
+                    true
+                }
+                popupMenu.show()
+            }
         }
     }
 
     private fun addTabView(title: String, count: String): View {
-        val tabItem = ItemTabCountBinding.inflate(LayoutInflater.from(binding.tab.context), binding.tab, false)
+        val tabItem = ItemTabCountBinding.inflate(
+            LayoutInflater.from(binding.tab.context),
+            binding.tab,
+            false
+        )
         tabItem.title.text = title
         tabItem.count.text = count
         tabItemList.add(tabItem.root)

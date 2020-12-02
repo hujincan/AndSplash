@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import org.bubbble.andsplash.R
 import org.bubbble.andsplash.databinding.FragmentPictureBinding
 import org.bubbble.andsplash.ui.info.InfoActivity
+import org.bubbble.andsplash.ui.personal.PersonalActivity
 
 /**
  * A simple [Fragment] subclass.
@@ -33,15 +34,21 @@ class PictureFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = PictureAdapter {
-            val intent = Intent(context, InfoActivity::class.java)
-            intent.putExtra("photo", it)
-            startActivity(intent)
+        val adapter = PictureAdapter { personal, picture ->
+            if (personal != null) {
+                val intent = Intent(context, PersonalActivity::class.java)
+                startActivity(intent)
+            } else if (picture != null) {
+                val intent = Intent(context, InfoActivity::class.java)
+                intent.putExtra("photo", picture)
+                startActivity(intent)
+            }
         }
 //        val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 //        layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
-        binding.photosList.layoutManager = LinearLayoutManager(context)
 //        binding.photosList.layoutManager = layoutManager
+        binding.photosList.layoutManager = LinearLayoutManager(context)
+//        binding.photosList.layoutManager = GridLayoutManager(context, 2)
         binding.photosList.adapter = adapter
         adapter.submitList(mutableListOf<PictureItem>().apply {
             add(PictureItem(R.drawable.photo_1))

@@ -1,0 +1,82 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="常规">
+
+        <ListPreference
+            app:defaultValue="system"
+            app:entries="@array/theme_entries"
+            app:entryValues="@array/theme_values"
+            app:key="theme"
+            app:title="选择主题"
+            app:useSimpleSummaryProvider="true" />
+
+        <Preference
+            app:key="cache"
+            app:title="清空缓存"
+            app:summary="缓存大小：17 MB" >
+
+        </Preference>
+
+        <org.bubbble.andsplash.ui.preference.DialogClearRecentSearches
+            app:key="sign_out"
+            app:title="退出登录"
+            app:summary="退出您当前登录的帐号"
+            app:negativeButtonText="取消"
+            app:positiveButtonText="退出"
+            app:dialogMessage="您确定要退出登录吗？" />
+
+        <ListPreference
+            app:defaultValue="system"
+            app:entries="@array/language_entries"
+            app:entryValues="@array/language_values"
+            app:key="language"
+            app:title="显示语言"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="下载">
+
+        <ListPreference
+            app:defaultValue="app_downloader"
+            app:entries="@array/downloader_entries"
+            app:entryValues="@array/downloader_values"
+            app:key="downloader"
+            app:title="选择下载器"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="original"
+            app:entries="@array/download_size_entries"
+            app:entryValues="@array/download_size_values"
+            app:key="download_size"
+            app:title="下载图像大小"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="normal"
+            app:entries="@array/preview_size_entries"
+            app:entryValues="@array/preview_size_values"
+            app:key="preview_size"
+            app:title="预览图像大小"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="关于">
+
+        <Preference
+            app:key="github"
+            app:title="Github开源项目"
+            app:summary="https://github.com/../AndSplash">
+
+            <intent
+                android:targetPackage="org.bubbble.andsplash"
+                android:targetClass="org.bubbble.andsplash.ui.hello.HelloActivity" />
+
+        </Preference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

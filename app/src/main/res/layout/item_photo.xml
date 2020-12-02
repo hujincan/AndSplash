@@ -5,8 +5,6 @@
     android:id="@+id/shot_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/margin_small"
-    android:paddingEnd="@dimen/margin_small"
     android:orientation="vertical">
 
     <LinearLayout
@@ -20,6 +18,7 @@
             android:id="@+id/author_icon"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:layout_marginStart="@dimen/margin_normal"
             android:src="@drawable/ic_default_profile_avatar"/>
 
         <TextView
@@ -46,6 +45,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_normal"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
         android:adjustViewBounds="true"
         tools:src="@drawable/photo_3"/>
 
