@@ -1,18 +1,21 @@
-package org.bubbble.iconandkit.util
+package org.bubbble.andsplash.util
 
 import android.annotation.SuppressLint
 import android.graphics.Matrix
 import android.graphics.PointF
 import android.graphics.RectF
-import android.util.Log
-import android.view.MotionEvent
+import android.view.*
 import android.view.MotionEvent.ACTION_POINTER_DOWN
 import android.view.MotionEvent.ACTION_POINTER_UP
-import android.view.ScaleGestureDetector
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.OverScroller
+import androidx.core.view.ViewCompat
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.dynamicanimation.animation.FlingAnimation
+import androidx.dynamicanimation.animation.FloatValueHolder
 import org.bubbble.andsplash.shared.util.logger
+import org.bubbble.andsplash.widget.LifeCalendarDrawable
+import kotlin.math.abs
 
 /**
  * @author  yd
@@ -94,6 +97,11 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
         callOnClick()
     }
 
+    private var mVelocityTracker: VelocityTracker? = null
+
+    private var mMaximumVelocity = ViewConfiguration.get(imageView.context).scaledMaximumFlingVelocity
+    private var mMinimumVelocity = ViewConfiguration.get(imageView.context).scaledMinimumFlingVelocity
+
     /**
      * 触摸点ID
      */
@@ -125,8 +133,8 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
     /**
      * 设置结果矩阵
      */
-    private fun notifyImageChange(scaleFactor: Float, focusX: Float, focusY: Float) {
-        if (checkMatrixBounds(scaleFactor, focusX, focusY)) {
+    private fun notifyImageChange(scaleFactor: Float, focusX: Float, focusY: Float, isFling: Boolean) {
+        if (checkMatrixBounds(scaleFactor, focusX, focusY, isFling)) {
             imageView.scaleType = ImageView.ScaleType.MATRIX
             imageView.imageMatrix = getDrawMatrix()
         }
@@ -144,7 +152,7 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
     /**
      * 检擦边界
      */
-    private fun checkMatrixBounds(scaleFactor: Float, focusX: Float, focusY: Float): Boolean {
+    private fun checkMatrixBounds(scaleFactor: Float, focusX: Float, focusY: Float, isFling: Boolean): Boolean {
         // Matrix的位置值，默认左上角是0，0
         val rect = getDisplayRect(getDrawMatrix()) ?: return false
         val height = rect.height()
@@ -158,8 +166,16 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
         val viewScale = viewWidth / viewHeight
         val rectScale = rect.width() / rect.height()
 
-        var moveX = offset.x - recordPointF.x
-        var moveY = offset.y - recordPointF.y
+        var moveX: Float
+        var moveY: Float
+        if (isFling) {
+            moveX = offsetFling.x
+            moveY = offsetFling.y
+        } else {
+            moveX = offset.x - recordPointF.x
+            moveY = offset.y - recordPointF.y
+
+        }
 
         logger("initialRect: left: ${initialRect.left} top: ${initialRect.top} right: ${initialRect.right} bottom: ${initialRect.bottom}")
 
@@ -191,7 +207,6 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
             }
         }
 
-
         suppMatrix.postTranslate(moveX, moveY)
         recordPointF.set(offset.x, offset.y)
 
@@ -206,7 +221,7 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
 
                 imageView.scaleType = ImageView.ScaleType.MATRIX
                 imageView.imageMatrix = getDrawMatrix()
-                notifyImageChange(1F, 0F, 0F)
+                notifyImageChange(1F, 0F, 0F, false)
                 return false
             }
 
@@ -283,6 +298,71 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
         fun onClick(view: View, count: Int)
     }
 
+    private fun initVelocityTrackerIfNotExists() {
+        if (mVelocityTracker == null) {
+            mVelocityTracker = VelocityTracker.obtain()
+        }
+    }
+
+    private fun recycleVelocityTracker() {
+        if (mVelocityTracker != null) {
+            mVelocityTracker!!.recycle()
+            mVelocityTracker = null
+        }
+    }
+
+    private val flingValueHolderX = FloatValueHolder()
+    private val flingValueHolderY = FloatValueHolder()
+
+    private val offsetFling = PointF(0F, 0F)
+    private val recordFling = PointF(0F, 0F)
+
+    private val flingAnimationX = FlingAnimation(flingValueHolderX)
+    private val flingAnimationY = FlingAnimation(flingValueHolderY)
+
+    private fun fling(velocityX: Float, velocityY: Float) {
+
+        flingAnimationX.cancel()
+        flingAnimationY.cancel()
+        flingValueHolderX.value = 0.0f
+        flingValueHolderY.value = 0.0f
+        offsetFling.set(0F, 0F)
+        recordFling.set(0F, 0F)
+
+        logger("velocityX: $velocityX  velocityY: $velocityY")
+        flingAnimationX.apply {
+            setStartVelocity(velocityX)
+            setMinValue(Float.NEGATIVE_INFINITY)
+            setMaxValue(Float.MAX_VALUE)
+            friction = 1F
+            minimumVisibleChange = DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS
+            addUpdateListener { _, value, _ ->
+                offsetFling.x = -(value - recordFling.x)
+                recordFling.x = value
+                logger("flingValueX: ${offsetFling.x}")
+
+                notifyImageChange(1F, 0F, 0F, true)
+            }
+            start()
+        }
+
+        flingAnimationY.apply {
+            setStartVelocity(velocityY)
+            setMinValue(Float.NEGATIVE_INFINITY)
+            setMaxValue(Float.MAX_VALUE)
+            friction = 1F
+            minimumVisibleChange = DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS
+            addUpdateListener { _, value, _ ->
+                offsetFling.y = -(value - recordFling.y)
+                recordFling.y = value
+                logger("flingValueY: ${offsetFling.y}")
+
+                notifyImageChange(1F, 0F, 0F, true)
+            }
+            start()
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         event?:return false
@@ -290,8 +370,14 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
         if (v.parent is ViewGroup){
             v.parent.requestDisallowInterceptTouchEvent(true)
         }
+
+        initVelocityTrackerIfNotExists()
+        mVelocityTracker!!.addMovement(event)
+
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
+                flingAnimationX.cancel()
+                flingAnimationY.cancel()
                 downTouch.set(event.xById(), event.yById())
                 // 按下，记录信息
                 touchDownTime = System.currentTimeMillis()
@@ -309,11 +395,11 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
                 offset.x += x - downTouch.x
                 offset.y += y - downTouch.y
                 downTouch.set(x, y)
-                notifyImageChange(1F, 0F, 0F)
+                notifyImageChange(1F, 0F, 0F, false)
 
                 // 规避滑动
-                if (maxFluctuation > 0 && (kotlin.math.abs(x - touchDownPoint.x) > maxFluctuation ||
-                            kotlin.math.abs(y - touchDownPoint.y) > maxFluctuation)) {
+                if (maxFluctuation > 0 && (abs(x - touchDownPoint.x) > maxFluctuation ||
+                            abs(y - touchDownPoint.y) > maxFluctuation)) {
                     reset()
                 }
                 if (x < 0 || y < 9 || x > viewWidth || y > viewHeight) {
@@ -326,6 +412,15 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
                 }
             }
             MotionEvent.ACTION_UP -> {
+
+                mVelocityTracker!!.computeCurrentVelocity(1000, mMaximumVelocity.toFloat())
+                val velocityY = mVelocityTracker!!.yVelocity
+                val velocityX = mVelocityTracker!!.xVelocity
+                if (abs(velocityY) > mMinimumVelocity || abs(velocityX) > mMinimumVelocity) {
+                    fling(-velocityX, -velocityY)
+                }
+                recycleVelocityTracker()
+
                 val now = System.currentTimeMillis()
                 if (now - touchDownTime > maxKeepTime) {
                     reset()
@@ -342,6 +437,7 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
             MotionEvent.ACTION_CANCEL -> {
                 // 触发取消时间，放弃本轮所有计数
                 reset()
+                recycleVelocityTracker()
                 return false
             }
             ACTION_POINTER_DOWN -> {
@@ -386,7 +482,7 @@ class UnboundedImageViewHelper private constructor(private val imageView: ImageV
 
         if (java.lang.Float.isNaN(scaleFactor) || java.lang.Float.isInfinite(scaleFactor)) return false
 
-        notifyImageChange(scaleFactor, focusX, focusY)
+        notifyImageChange(scaleFactor, focusX, focusY, false)
         return true
     }
 

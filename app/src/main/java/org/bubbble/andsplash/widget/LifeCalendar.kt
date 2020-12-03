@@ -213,6 +213,7 @@ class LifeCalendar(context: Context, attrs: AttributeSet?, defStyleAttr: Int, de
     }
 
     override fun computeScroll() {
+        super.computeScroll()
         if (lifeCalendarDrawable.getOrientation() == VERTICAL) {
             if (mScroller.computeScrollOffset()) {
                 scrollTo(0, mScroller.currY)

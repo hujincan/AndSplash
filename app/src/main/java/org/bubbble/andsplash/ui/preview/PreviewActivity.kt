@@ -19,7 +19,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import org.bubbble.andsplash.R
 import org.bubbble.andsplash.databinding.ActivityPreviewBinding
-import org.bubbble.iconandkit.util.UnboundedImageViewHelper
+import org.bubbble.andsplash.util.UnboundedImageViewHelper
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -124,7 +124,7 @@ class PreviewActivity : AppCompatActivity() {
                     photo.setImageDrawable(resource)
                     UnboundedImageViewHelper.with(photo).addClickListener(object : UnboundedImageViewHelper.ClickListener {
                         override fun onClick(view: View, count: Int) {
-                            toggle()
+//                            toggle()
                         }
                     })
                 }
