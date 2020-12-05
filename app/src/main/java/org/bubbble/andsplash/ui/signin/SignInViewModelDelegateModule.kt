@@ -7,8 +7,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
+import org.bubbble.andsplash.shared.data.signin.AuthorizeRepository
 import org.bubbble.andsplash.shared.di.IoDispatcher
-import org.bubbble.andsplash.shared.domain.auth.ObserveUserAuthStateUseCase
+import org.bubbble.andsplash.shared.domain.auth.ObserveUserAuthStateCoroutineUseCase
 import javax.inject.Singleton
 
 /**
@@ -23,7 +24,7 @@ class SignInViewModelDelegateModule {
     @Singleton
     @Provides
     fun provideSignInViewModelDelegate(
-        observerUserAuthStateUseCase: ObserveUserAuthStateUseCase,
+        observerUserAuthStateUseCase: ObserveUserAuthStateCoroutineUseCase,
         @ApplicationContext context: Context
     ): SignInViewModelDelegate {
         return GoogleSignInViewModelDelegate(
@@ -35,8 +36,9 @@ class SignInViewModelDelegateModule {
     @Singleton
     @Provides
     fun provideObserveUserAuthStateUseCase(
+        repository: AuthorizeRepository,
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
-    ): ObserveUserAuthStateUseCase {
-        return ObserveUserAuthStateUseCase(ioDispatcher)
+    ): ObserveUserAuthStateCoroutineUseCase {
+        return ObserveUserAuthStateCoroutineUseCase(repository, ioDispatcher)
     }
 }

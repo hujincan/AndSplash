@@ -19,10 +19,13 @@ package org.bubbble.andsplash.util.signin
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.bubbble.andsplash.shared.util.logger
 
 
 /**
@@ -32,7 +35,7 @@ import kotlinx.coroutines.launch
  */
 interface SignInHandler {
 
-    fun makeSignInIntent(context: Activity): LiveData<Intent?>
+    fun makeSignInIntent(context: Activity): LiveData<String?>
 
     fun signOut(context: Context)
 }
@@ -40,20 +43,22 @@ interface SignInHandler {
 /**
  * 与Firebase Auth交互的[SignInHandler]的实现。
  */
-class GoogleAuthSignInHandler(private val externalScope: CoroutineScope) : SignInHandler {
+class UnsplashAuthSignInHandler(private val externalScope: CoroutineScope) : SignInHandler {
 
     /**
      * 请求登录 Intent。
      *
      * 要观察结果，您必须将其传递给startActivityForResult。
      */
-    override fun makeSignInIntent(context: Activity): LiveData<Intent?> {
+    override fun makeSignInIntent(context: Activity): LiveData<String?> {
 
-        val result = MutableLiveData<Intent?>()
+        val result = MutableLiveData<String?>()
+        logger("准备启动了")
 
         // 在后台运行，因为AuthUI会执行I / O操作。
         externalScope.launch {
 
+            result.postValue("你好")
         }
         return result
     }

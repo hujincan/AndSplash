@@ -7,8 +7,11 @@ import dagger.hilt.android.components.ApplicationComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import org.bubbble.andsplash.shared.data.signin.AuthorizeRepository
+import org.bubbble.andsplash.shared.data.signin.DefaultAuthorizeRepository
 import org.bubbble.andsplash.shared.di.ApplicationScope
 import org.bubbble.andsplash.shared.di.DefaultDispatcher
+import org.bubbble.andsplash.shared.network.service.AuthorizeService
 import javax.inject.Singleton
 
 /**
@@ -25,5 +28,11 @@ class AppModule {
     fun providesApplicationScope(
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
     ): CoroutineScope = CoroutineScope(SupervisorJob() + defaultDispatcher)
+
+
+    @Singleton
+    @Provides
+    fun provideAgendaRepository(service: AuthorizeService): AuthorizeRepository =
+        DefaultAuthorizeRepository(service)
 
 }

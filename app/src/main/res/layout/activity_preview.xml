@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/ThemeOverlay.AndSplash.FullscreenContainer"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.preview.PreviewActivity">
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,32 +15,81 @@
         android:scaleType="fitCenter"
         android:keepScreenOn="true"/>
 
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
-    <FrameLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:background="@drawable/foreground_mask_top"
+        android:theme="@style/AppTheme.AppBarOverlay.Dark"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/transparent"
+            app:popupTheme="@style/AppTheme.PopupOverlay.Dark" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/foreground_album"
+        android:paddingTop="@dimen/margin_normal"
+        android:layout_gravity="bottom"
         android:fitsSystemWindows="true">
 
-        <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
-            android:background="@color/white"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
+            android:padding="@dimen/margin_normal"
+            android:src="@drawable/ic_album_add"
+            app:layout_constraintEnd_toStartOf="@+id/imageView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
 
-            <Button
-                android:id="@+id/dummy_button"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/dummy_button" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_normal"
+            android:src="@drawable/ic_favorite_border"
+            app:layout_constraintEnd_toStartOf="@+id/imageView3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
 
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_normal"
+            android:src="@drawable/ic_download"
+            app:layout_constraintEnd_toStartOf="@+id/open"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
 
-    </FrameLayout>
+        <ImageView
+            android:id="@+id/open"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_normal"
+            android:src="@drawable/ic_open"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView3"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
 
-</FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

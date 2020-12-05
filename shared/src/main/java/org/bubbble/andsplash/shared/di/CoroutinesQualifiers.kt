@@ -13,6 +13,8 @@ import javax.inject.Qualifier
  限定符是可选的，当与 @Inject 一起使用在与注入器无关的类时，对于一个字段或参数，应该最多只有一个限定符被标注
 
  @Retention BINARY是指编译成二进制文件阶段
+
+ 注解是将元数据附加到代码的方法。要声明注解，请将 annotation 修饰符放在类的前面
  */
 
 // 首先，定义要用于为 @Binds 或 @Provides 方法添加注释的限定符：

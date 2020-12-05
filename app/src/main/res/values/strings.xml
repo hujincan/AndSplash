@@ -23,8 +23,8 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="dialog_sign_in_content">登录即可保存活动、预约席位并为会议评分（如果是会议参加者）。系统将通过您的帐号同步在应用和网站中执行的操作。</string>
-    <string name="dialog_sign_out_content">所有已保存的活动、席位预约和会议评分（如果是会议参加者）都会持续同步到您的帐号中。</string>
+    <string name="dialog_sign_in_content">登录即可查看个人上传照片、收藏喜爱的镜头、浏览关注的动态。</string>
+    <string name="dialog_sign_out_content">所有您喜欢、收藏的照片都会持续同步到您的帐号中。</string>
 
     <string name="tos_url" translatable="false">https://policies.google.com/terms</string>
     <string name="privacy_policy_url" translatable="false">https://policies.google.com/privacy</string>

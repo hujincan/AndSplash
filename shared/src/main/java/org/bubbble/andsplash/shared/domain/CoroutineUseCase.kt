@@ -7,13 +7,16 @@ import org.bubbble.andsplash.shared.result.Result
 /**
  * @author Andrew
  * @date 2020/10/19 9:51
+ * 协程UseCase
  */
-abstract class UseCase<in P, R>(private val coroutineDispatcher: CoroutineDispatcher) {
+abstract class CoroutineUseCase<in P, R>(private val coroutineDispatcher: CoroutineDispatcher) {
 
     /** 异步执行用例并返回一个 [Result].
      *
      * @return a [Result].
      * @param parameters 用于运行用例的输入参数
+     *
+     * operator 重载操作符的函数执行内容
      */
     suspend operator fun invoke(parameters: P): Result<R> {
         return try {

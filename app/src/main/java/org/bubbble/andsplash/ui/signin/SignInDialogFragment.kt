@@ -1,7 +1,6 @@
 package org.bubbble.andsplash.ui.signin
 
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,19 +8,18 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.bubbble.andsplash.databinding.SignInDialogFragmentBinding
+import org.bubbble.andsplash.shared.data.ConnectionURL
 import org.bubbble.andsplash.util.signin.SignInHandler
 import org.bubbble.andsplash.shared.result.EventObserver
+import org.bubbble.andsplash.util.CustomTabUtil
+import org.bubbble.andsplash.util.executeAfter
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SignInDialogFragment : AppCompatDialogFragment() {
-
-    @Inject
-    lateinit var signInHandler: SignInHandler
 
     private val signInViewModel: SignInDialogViewModel by viewModels()
 
@@ -39,32 +37,26 @@ class SignInDialogFragment : AppCompatDialogFragment() {
     ): View {
 
         binding = SignInDialogFragmentBinding.inflate(layoutInflater, container, false)
-
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        // 监听了一个performSignInEvent，它的值是一个Event<?>，? 可能是RequestSignIn或RequestSignOut
-        // 这取决于按钮点击 viewModel.onSignIn() 或者 其他的什么的。
-        // 监听了点击，然后观察了一个凭空创造出来的 observer？
+        // 只负责启动浏览器登录，然后dismiss()
         signInViewModel.performSignInEvent.observe(viewLifecycleOwner, EventObserver { request ->
             if (request == SignInEvent.RequestSignIn) {
                 activity?.let { activity ->
-                    val signInIntent = signInHandler.makeSignInIntent(activity)
-
-                    signInIntent.observeForever(object : Observer<Intent?> {
-                        override fun onChanged(it: Intent?) {
-                            activity.startActivityForResult(it, REQUEST_CODE_SIGN_IN)
-                            signInIntent.removeObserver(this)
-                        }
-                    })
+                    CustomTabUtil.open(activity, ConnectionURL.LOGIN_URL)
                 }
                 dismiss()
             }
         })
 
+        binding.executeAfter {
+            viewModel = signInViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
         if (showsDialog) {
             (requireDialog() as AlertDialog).setView(binding.root)
         }

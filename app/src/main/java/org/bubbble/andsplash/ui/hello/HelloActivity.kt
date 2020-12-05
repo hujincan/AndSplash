@@ -52,7 +52,7 @@ class HelloActivity : AppCompatActivity() {
 
         if (requestCode == SignInDialogFragment.REQUEST_CODE_SIGN_IN) {
             lifecycleScope.launch {
-                helloViewModel.handleSignInResult(data)
+//                helloViewModel.handleSignInResult(data)
             }
         }
     }

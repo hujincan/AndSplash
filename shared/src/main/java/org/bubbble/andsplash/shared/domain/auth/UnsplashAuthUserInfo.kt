@@ -7,7 +7,7 @@ import org.bubbble.andsplash.shared.data.signin.UnsplashAccount
  * @author Andrew
  * @date 2020/10/25 20:22
  */
-class GoogleAuthUserInfo(private val account: UnsplashAccount?) : AuthenticatedUserInfo {
+class UnsplashAuthUserInfo(private val account: UnsplashAccount?) : AuthenticatedUserInfo {
 
     override fun isSignedIn(): Boolean = account != null
 

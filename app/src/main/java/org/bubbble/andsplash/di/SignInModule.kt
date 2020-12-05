@@ -7,7 +7,7 @@ import dagger.hilt.android.components.ApplicationComponent
 import kotlinx.coroutines.CoroutineScope
 import org.bubbble.andsplash.util.signin.SignInHandler
 import org.bubbble.andsplash.shared.di.ApplicationScope
-import org.bubbble.andsplash.util.signin.GoogleAuthSignInHandler
+import org.bubbble.andsplash.util.signin.UnsplashAuthSignInHandler
 
 /**
  * @author Andrew
@@ -19,5 +19,5 @@ internal class SignInModule {
     @Provides
     fun provideSignInHandler(
         @ApplicationScope applicationScope: CoroutineScope,
-    ): SignInHandler = GoogleAuthSignInHandler(applicationScope)
+    ): SignInHandler = UnsplashAuthSignInHandler(applicationScope)
 }

@@ -3,7 +3,7 @@ package org.bubbble.andsplash.ui
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import org.bubbble.andsplash.shared.domain.prefs.OnLaunchUseCase
+import org.bubbble.andsplash.shared.domain.prefs.OnLaunchCoroutineUseCase
 import org.bubbble.andsplash.shared.result.Event
 import org.bubbble.andsplash.shared.result.data
 
@@ -12,7 +12,7 @@ import org.bubbble.andsplash.shared.result.data
  * @date 2020/10/20 11:22
  */
 class LaunchViewModel @ViewModelInject constructor(
-    onLaunchUseCase: OnLaunchUseCase
+    onLaunchUseCase: OnLaunchCoroutineUseCase
 ) : ViewModel() {
     val launchDestination = liveData {
         val result = onLaunchUseCase(Unit)

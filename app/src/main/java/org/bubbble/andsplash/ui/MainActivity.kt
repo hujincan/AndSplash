@@ -6,15 +6,17 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.MenuItem
-import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,12 +25,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.bubbble.andsplash.R
 import org.bubbble.andsplash.databinding.ActivityMainBinding
+import org.bubbble.andsplash.shared.data.ConnectionURL
 import org.bubbble.andsplash.shared.result.EventObserver
 import org.bubbble.andsplash.ui.personal.PersonalFragment
 import org.bubbble.andsplash.ui.pictures.PictureFragment
 import org.bubbble.andsplash.ui.search.SearchActivity
 import org.bubbble.andsplash.ui.signin.SignInDialogFragment
 import org.bubbble.andsplash.ui.signin.SignOutDialogFragment
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -67,28 +71,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
 
-        // 展开状态使用状态栏和导航栏暗色
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-                    or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        or View.SYSTEM_UI_FLAG_VISIBLE
-                        or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
-            } else {
-                window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        or View.SYSTEM_UI_FLAG_VISIBLE)
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.statusBarColor = Color.TRANSPARENT
         }
-        window.statusBarColor = Color.TRANSPARENT
-        window.navigationBarColor = Color.WHITE
 
         // 开启动画
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
@@ -126,6 +112,14 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             )
             startActivity(intent, options.toBundle())
         }
+
+        binding.searchBox.authorIcon.setOnClickListener {
+            viewModel.onProfileClicked()
+        }
+
+        viewModel.resultTest.observe(this, {
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+        })
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -205,16 +199,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         return true
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == SignInDialogFragment.REQUEST_CODE_SIGN_IN) {
-            lifecycleScope.launch {
-                viewModel.handleSignInResult(data)
-            }
-        }
-    }
-
     // 解决容器共享动画退出时动画问题
     override fun finishAfterTransition() {
         super.finish()
@@ -226,5 +210,18 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     private fun openSignOutDialog() {
         SignOutDialogFragment().show(supportFragmentManager, DIALOG_SIGN_OUT)
+    }
+
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent != null && intent.data != null && !TextUtils.isEmpty(intent.data!!.authority)
+            && ConnectionURL.UNSPLASH_LOGIN_CALLBACK == intent.data!!.authority
+        ) {
+            val code = intent.data?.getQueryParameter("code")
+            lifecycleScope.launch {
+                viewModel.handleSignInResult(code)
+            }
+        }
     }
 }
