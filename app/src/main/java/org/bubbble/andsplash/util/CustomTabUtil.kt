@@ -10,7 +10,6 @@ import org.bubbble.andsplash.shared.data.ConnectionURL
  * @date 2020/12/05 16:46
  */
 object CustomTabUtil {
-
     fun open(context: Context, url: String) {
         val builder = CustomTabsIntent.Builder()
         val customTabsIntent = builder.build()

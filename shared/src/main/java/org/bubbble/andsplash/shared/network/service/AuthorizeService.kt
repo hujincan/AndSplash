@@ -1,12 +1,12 @@
 package org.bubbble.andsplash.shared.network.service
 
-import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.bubbble.andsplash.model.AccessToken
 import org.bubbble.andsplash.shared.data.BuildConfig
 import org.bubbble.andsplash.shared.data.ConnectionURL
 import org.bubbble.andsplash.shared.network.api.AuthorizeApi
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -19,16 +19,22 @@ class AuthorizeService(
     gsonConverterFactory: GsonConverterFactory
 ){
 
+    private val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
+
     private var api = Retrofit.Builder()
         .baseUrl(ConnectionURL.UNSPLASH_URL)
-        .client(client.newBuilder().build())
+        .client(client.newBuilder().apply {
+            if (org.bubbble.andsplash.shared.BuildConfig.DEBUG) {
+                addInterceptor(logger)
+            }
+        }.build())
         .addConverterFactory(gsonConverterFactory)
         .build()
         .create(AuthorizeApi::class.java)
 
-    fun requestAccessToken(
+    suspend fun requestAccessToken(
         code: String?
-    ): AccessToken {
+    ): Response<AccessToken> {
         return api.getAccessToken(
             BuildConfig.ACCESS_KEY,
             BuildConfig.SECRET_KEY,

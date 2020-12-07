@@ -8,9 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.launch
+import org.bubbble.andsplash.shared.domain.prefs.HelloCompleteActionUseCase
 import org.bubbble.andsplash.shared.result.Event
-import org.bubbble.andsplash.shared.util.PreferencesUtil
-import org.bubbble.andsplash.ui.signin.SignInViewModelDelegate
 
 /**
  * @author Andrew
@@ -18,8 +17,8 @@ import org.bubbble.andsplash.ui.signin.SignInViewModelDelegate
  */
 class HelloViewModel @ViewModelInject constructor(
     @ActivityContext private val context: Context,
-    signInViewModelDelegate: SignInViewModelDelegate
-) : ViewModel(), SignInViewModelDelegate by signInViewModelDelegate {
+    private val helloCompleteActionUseCase: HelloCompleteActionUseCase
+) : ViewModel() {
 
     private val _navigateToMainActivity = MutableLiveData<Event<Unit>>()
     val navigateToMainActivity: LiveData<Event<Unit>> = _navigateToMainActivity
@@ -29,7 +28,7 @@ class HelloViewModel @ViewModelInject constructor(
 
     fun getStartedClick() {
         viewModelScope.launch {
-            PreferencesUtil.put(context, "skip", true)
+            helloCompleteActionUseCase(true)
             _navigateToMainActivity.postValue(Event(Unit))
         }
     }

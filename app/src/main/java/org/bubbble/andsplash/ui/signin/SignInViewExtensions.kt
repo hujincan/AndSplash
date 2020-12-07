@@ -31,15 +31,15 @@ fun Toolbar.setupProfileMenuItem(
         viewModel.onProfileClicked()
         true
     }
-    viewModel.currentUserInfo.observe(lifecycleOwner, {
-        setProfileContentDescription(profileItem, resources, it)
-    })
+//    viewModel.currentUserInfo.observe(lifecycleOwner, {
+//        setProfileContentDescription(profileItem, resources, it)
+//    })
 
     val avatarSize = resources.getDimensionPixelSize(R.dimen.nav_account_image_size)
     val target = profileItem.asGlideTarget(avatarSize)
-    viewModel.currentUserImageUri.observe(lifecycleOwner, {
-        setProfileAvatar(context, target, it)
-    })
+//    viewModel.currentUserImageUri.observe(lifecycleOwner, {
+//        setProfileAvatar(context, target, it)
+//    })
 }
 
 fun setProfileContentDescription(item: MenuItem, res: Resources, user: AuthenticatedUserInfo?) {

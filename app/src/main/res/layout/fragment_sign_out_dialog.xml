@@ -49,16 +49,16 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:textAppearance="@style/TextAppearance.IOSched.AccountDialog.Username"
-                app:username="@{viewModel.currentUserInfo}"
                 tools:text="User Name" />
 
+<!--            app:username="@{viewModel.currentUserInfo}"-->
             <TextView
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="1"
-                app:userEmail="@{viewModel.currentUserInfo}"
                 tools:text="user@email.com" />
+<!--            app:userEmail="@{viewModel.currentUserInfo}"-->
         </LinearLayout>
 
         <ImageView

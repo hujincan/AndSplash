@@ -3,10 +3,20 @@ package org.bubbble.andsplash.shared.util
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object PreferencesUtil {
+@Singleton
+class PreferencesUtil @Inject constructor(
+    @ApplicationContext val context: Context
+) {
 
-    fun <T> put(context: Context, key: String, value: T) {
+    init {
+        logger("PreferencesUtil：初始化了一次！！！！")
+    }
+
+    fun <T> put(key: String, value: T) {
         val mShareConfig = PreferenceManager.getDefaultSharedPreferences(context)
         put(mShareConfig, key, value)
     }
@@ -25,7 +35,7 @@ object PreferencesUtil {
         }
     }
 
-    fun <T> get(context: Context, key: String, defValue: T): T {
+    fun <T> get(key: String, defValue: T): T {
         val mShareConfig = PreferenceManager.getDefaultSharedPreferences(context)
 //        Log.d("PreferencesUtil", Thread.currentThread().name)
         return get(mShareConfig, key, defValue)

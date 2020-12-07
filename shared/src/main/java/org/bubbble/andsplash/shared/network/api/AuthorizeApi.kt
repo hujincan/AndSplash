@@ -2,6 +2,7 @@ package org.bubbble.andsplash.shared.network.api
 
 import androidx.lifecycle.MutableLiveData
 import org.bubbble.andsplash.model.AccessToken
+import retrofit2.Response
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -12,11 +13,11 @@ import retrofit2.http.Query
 interface AuthorizeApi {
 
     @POST("oauth/token")
-    fun getAccessToken(
+    suspend fun getAccessToken(
         @Query("client_id") client_id: String,
         @Query("client_secret") client_secret: String,
         @Query("redirect_uri") redirect_uri: String,
         @Query("code") code: String?,
         @Query("grant_type") grant_type: String,
-    ): AccessToken
+    ): Response<AccessToken>
 }

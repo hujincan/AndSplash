@@ -25,6 +25,8 @@ sealed class Result<out R> {
     }
 }
 
+object NoDataException : Exception()
+
 /**
  * 如果[Result]的类型为[Success]且保存为非null [Success.data]，则为true。
  */

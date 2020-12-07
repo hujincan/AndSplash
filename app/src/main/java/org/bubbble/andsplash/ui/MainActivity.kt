@@ -32,6 +32,7 @@ import org.bubbble.andsplash.ui.pictures.PictureFragment
 import org.bubbble.andsplash.ui.search.SearchActivity
 import org.bubbble.andsplash.ui.signin.SignInDialogFragment
 import org.bubbble.andsplash.ui.signin.SignOutDialogFragment
+import org.bubbble.andsplash.util.Utils
 import javax.inject.Inject
 
 
@@ -95,10 +96,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         viewModel.navigateToSignOutDialogAction.observe(this, EventObserver {
             openSignOutDialog()
         })
-
-        lifecycleScope.launch {
-            viewModel.handleSignInResult(null)
-        }
 
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
@@ -219,6 +216,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             && ConnectionURL.UNSPLASH_LOGIN_CALLBACK == intent.data!!.authority
         ) {
             val code = intent.data?.getQueryParameter("code")
+            Utils.copyText(this, code)
             lifecycleScope.launch {
                 viewModel.handleSignInResult(code)
             }

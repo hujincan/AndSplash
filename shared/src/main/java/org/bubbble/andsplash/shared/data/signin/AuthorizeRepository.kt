@@ -1,8 +1,8 @@
 package org.bubbble.andsplash.shared.data.signin
 
-import androidx.lifecycle.MutableLiveData
 import org.bubbble.andsplash.model.AccessToken
 import org.bubbble.andsplash.shared.network.service.AuthorizeService
+import retrofit2.Response
 
 /**
  * @author Andrew
@@ -10,12 +10,12 @@ import org.bubbble.andsplash.shared.network.service.AuthorizeService
  */
 interface AuthorizeRepository {
 
-    suspend fun getAccessToken(code: String?): AccessToken
+    suspend fun getAccessToken(code: String?): Response<AccessToken>
 }
 
 class DefaultAuthorizeRepository(private val service: AuthorizeService): AuthorizeRepository {
 
-    override suspend fun getAccessToken(code: String?): AccessToken {
+    override suspend fun getAccessToken(code: String?): Response<AccessToken> {
         return service.requestAccessToken(code)
     }
 

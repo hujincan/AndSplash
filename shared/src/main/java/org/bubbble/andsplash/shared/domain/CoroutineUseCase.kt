@@ -2,6 +2,7 @@ package org.bubbble.andsplash.shared.domain
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.bubbble.andsplash.shared.result.NoDataException
 import org.bubbble.andsplash.shared.result.Result
 
 /**
@@ -22,10 +23,12 @@ abstract class CoroutineUseCase<in P, R>(private val coroutineDispatcher: Corout
         return try {
             // 将所有用例的执行移至注入的调度程序
             // 在生产代码中，这通常是默认调度程序（后台线程）
-            // 在测试中，这将成为TestCoroutineDispatcher
             withContext(coroutineDispatcher) {
-                execute(parameters).let {
-                    Result.Success(it)
+                val request = execute(parameters)
+                if (request != null) {
+                    Result.Success(request)
+                } else {
+                    Result.Error(NoDataException)
                 }
             }
         } catch (e: Exception) {

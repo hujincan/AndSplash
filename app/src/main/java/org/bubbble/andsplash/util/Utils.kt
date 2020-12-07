@@ -1,6 +1,8 @@
 package org.bubbble.andsplash.util
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Insets
@@ -107,4 +109,15 @@ object Utils {
             displayMetrics.widthPixels
         }
     }
+
+
+    /**
+     * 复制文字
+     */
+    fun copyText(context: Context, text: CharSequence?) {
+        val clipboard: ClipboardManager =
+            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboard.setPrimaryClip(ClipData.newPlainText("text", text))
+    }
+
 }

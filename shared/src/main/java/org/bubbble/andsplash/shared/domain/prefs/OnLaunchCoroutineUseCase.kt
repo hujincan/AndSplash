@@ -1,7 +1,5 @@
 package org.bubbble.andsplash.shared.domain.prefs
 
-import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import org.bubbble.andsplash.shared.di.IoDispatcher
 import org.bubbble.andsplash.shared.domain.CoroutineUseCase
@@ -13,7 +11,7 @@ import javax.inject.Inject
  * @date 2020/10/19 9:30
  */
 class OnLaunchCoroutineUseCase @Inject constructor(
-    @ApplicationContext val context: Context,
+    private val preferencesUtil: PreferencesUtil,
     // 看到这里的 @IoDispatcher 了吗，这里其实最终依赖的实例是 Dispatchers.IO
     @IoDispatcher dispatcher: CoroutineDispatcher
 
@@ -21,5 +19,5 @@ class OnLaunchCoroutineUseCase @Inject constructor(
     // 这里是继承了UseCase，并且整个类只有一个功能，所以现在就可以明确泛型类型了
 ) : CoroutineUseCase<Unit, Boolean>(dispatcher) {
 
-    override suspend fun execute(parameters: Unit): Boolean = PreferencesUtil.get(context, "skip", false)
+    override suspend fun execute(parameters: Unit): Boolean = preferencesUtil.get("skip", false)
 }

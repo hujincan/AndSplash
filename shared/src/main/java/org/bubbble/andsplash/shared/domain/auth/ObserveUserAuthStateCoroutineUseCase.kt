@@ -6,18 +6,25 @@ import org.bubbble.andsplash.model.AccessToken
 import org.bubbble.andsplash.shared.data.signin.AuthorizeRepository
 import org.bubbble.andsplash.shared.di.IoDispatcher
 import org.bubbble.andsplash.shared.domain.CoroutineUseCase
+import retrofit2.Response
+import javax.inject.Inject
 
 /**
  * @author Andrew
  * @date 2020/10/25 19:29
  */
 
-class ObserveUserAuthStateCoroutineUseCase(
+class ObserveUserAuthStateCoroutineUseCase @Inject constructor (
     private val repository: AuthorizeRepository,
     @IoDispatcher dispatcher: CoroutineDispatcher
-) : CoroutineUseCase<String?, AccessToken>(dispatcher) {
+) : CoroutineUseCase<String?, AccessToken?>(dispatcher) {
 
-    override suspend fun execute(parameters: String?): AccessToken {
-        return repository.getAccessToken(parameters)
+    override suspend fun execute(parameters: String?): AccessToken?  {
+        val request = repository.getAccessToken(parameters)
+        return if (request.isSuccessful) {
+            request.body()
+        } else {
+            null
+        }
     }
 }

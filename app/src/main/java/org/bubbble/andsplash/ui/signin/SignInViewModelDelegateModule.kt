@@ -6,10 +6,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineDispatcher
-import org.bubbble.andsplash.shared.data.signin.AuthorizeRepository
-import org.bubbble.andsplash.shared.di.IoDispatcher
 import org.bubbble.andsplash.shared.domain.auth.ObserveUserAuthStateCoroutineUseCase
+import org.bubbble.andsplash.shared.domain.prefs.AccessTokenSaveUseCase
 import javax.inject.Singleton
 
 /**
@@ -21,24 +19,20 @@ import javax.inject.Singleton
 @Module
 class SignInViewModelDelegateModule {
 
+    /**
+     * 需要它是单例的注入依赖，所以这里定义了构建器
+     */
     @Singleton
     @Provides
     fun provideSignInViewModelDelegate(
         observerUserAuthStateUseCase: ObserveUserAuthStateCoroutineUseCase,
+        accessTokenSaveUseCase: AccessTokenSaveUseCase,
         @ApplicationContext context: Context
     ): SignInViewModelDelegate {
-        return GoogleSignInViewModelDelegate(
+        return UnsplashSignInViewModelDelegate(
             observerUserAuthStateUseCase = observerUserAuthStateUseCase,
+            accessTokenSaveUseCase = accessTokenSaveUseCase,
             context = context
         )
-    }
-
-    @Singleton
-    @Provides
-    fun provideObserveUserAuthStateUseCase(
-        repository: AuthorizeRepository,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher,
-    ): ObserveUserAuthStateCoroutineUseCase {
-        return ObserveUserAuthStateCoroutineUseCase(repository, ioDispatcher)
     }
 }

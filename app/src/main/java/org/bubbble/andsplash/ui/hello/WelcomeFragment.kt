@@ -35,8 +35,8 @@ class WelcomeFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.viewModel = helloViewModel
-        binding.buttonSignin.doOnLayout {
-            activity?.reportFullyDrawn()
-        }
+//        binding.buttonSignin.doOnLayout {
+//            activity?.reportFullyDrawn()
+//        }
     }
 }
