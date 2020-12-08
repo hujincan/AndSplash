@@ -1,18 +1,15 @@
 package org.bubbble.andsplash.ui.signin
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.bubbble.andsplash.model.AccessToken
-import org.bubbble.andsplash.shared.data.signin.AuthenticatedUserInfo
 import org.bubbble.andsplash.shared.domain.auth.ObserveUserAuthStateCoroutineUseCase
-import org.bubbble.andsplash.shared.domain.prefs.AccessTokenSaveUseCase
+import org.bubbble.andsplash.shared.domain.user.UserInfoUpdateUseCase
 import org.bubbble.andsplash.shared.result.Event
 import org.bubbble.andsplash.shared.result.data
-import org.bubbble.andsplash.shared.util.logger
 import javax.inject.Inject
 
 /**
@@ -49,7 +46,7 @@ interface SignInViewModelDelegate {
 
 internal class UnsplashSignInViewModelDelegate @Inject constructor(
     private val observerUserAuthStateUseCase: ObserveUserAuthStateCoroutineUseCase,
-    private val accessTokenSaveUseCase: AccessTokenSaveUseCase,
+    private val userInfoUpdateUseCase: UserInfoUpdateUseCase,
     @ApplicationContext val context: Context
 ) : SignInViewModelDelegate {
 
@@ -68,7 +65,7 @@ internal class UnsplashSignInViewModelDelegate @Inject constructor(
     override suspend fun handleSignInResult(data: String?) {
         val fine = observerUserAuthStateUseCase(data).data
         fine?.let {
-            accessTokenSaveUseCase(it)
+            userInfoUpdateUseCase(Unit)
         }
         _resultTest.value = "access_token：${fine?.access_token} \n token_type：${fine?.token_type} \n scope：${fine?.scope} \n created_at：${fine?.created_at}"
     }

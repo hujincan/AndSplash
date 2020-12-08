@@ -12,16 +12,12 @@ import javax.inject.Inject
  * @author Andrew
  * @date 2020/12/07 20:17
  */
-class AccessTokenSaveUseCase @Inject constructor(
+class AccessTokenUseCase @Inject constructor(
     private val preferencesUtil: PreferencesUtil,
     @IoDispatcher dispatcher: CoroutineDispatcher
-) : CoroutineUseCase<AccessToken, Unit>(dispatcher) {
-    override suspend fun execute(parameters: AccessToken) {
-        preferencesUtil.run {
-            put(BuildConfig.ACCESS_TOKEN, parameters.access_token)
-            put(BuildConfig.TOKEN_TYPE, parameters.token_type)
-            put(BuildConfig.SCOPE, parameters.scope)
-            put(BuildConfig.CREATED_AT, parameters.created_at)
-        }
+) : CoroutineUseCase<Unit, String?>(dispatcher) {
+
+    override suspend fun execute(parameters: Unit): String? {
+        return preferencesUtil.get(BuildConfig.ACCESS_TOKEN, null)
     }
 }

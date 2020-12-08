@@ -20,11 +20,6 @@ class ObserveUserAuthStateCoroutineUseCase @Inject constructor (
 ) : CoroutineUseCase<String?, AccessToken?>(dispatcher) {
 
     override suspend fun execute(parameters: String?): AccessToken?  {
-        val request = repository.getAccessToken(parameters)
-        return if (request.isSuccessful) {
-            request.body()
-        } else {
-            null
-        }
+        return repository.getAccessToken(parameters)
     }
 }

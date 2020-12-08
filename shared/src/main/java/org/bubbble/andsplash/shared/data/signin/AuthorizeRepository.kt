@@ -1,7 +1,9 @@
 package org.bubbble.andsplash.shared.data.signin
 
 import org.bubbble.andsplash.model.AccessToken
+import org.bubbble.andsplash.shared.data.BuildConfig
 import org.bubbble.andsplash.shared.network.service.AuthorizeService
+import org.bubbble.andsplash.shared.util.PreferencesUtil
 import retrofit2.Response
 
 /**
@@ -9,14 +11,29 @@ import retrofit2.Response
  * @date 2020/12/05 21:51
  */
 interface AuthorizeRepository {
-
-    suspend fun getAccessToken(code: String?): Response<AccessToken>
+    suspend fun getAccessToken(code: String?): AccessToken?
 }
 
-class DefaultAuthorizeRepository(private val service: AuthorizeService): AuthorizeRepository {
+class DefaultAuthorizeRepository(
+    private val service: AuthorizeService,
+    private val preferencesUtil: PreferencesUtil): AuthorizeRepository {
 
-    override suspend fun getAccessToken(code: String?): Response<AccessToken> {
-        return service.requestAccessToken(code)
+    override suspend fun getAccessToken(code: String?): AccessToken? {
+        val result = service.requestAccessToken(code)
+        if (result.isSuccessful) {
+            result.body()?.let {
+                saveAccessToken(it)
+            }
+        }
+        return result.body()
     }
 
+    private fun saveAccessToken(accessToken: AccessToken) {
+        preferencesUtil.run {
+            put(BuildConfig.ACCESS_TOKEN, accessToken.access_token)
+            put(BuildConfig.TOKEN_TYPE, accessToken.token_type)
+            put(BuildConfig.SCOPE, accessToken.scope)
+            put(BuildConfig.CREATED_AT, accessToken.created_at)
+        }
+    }
 }

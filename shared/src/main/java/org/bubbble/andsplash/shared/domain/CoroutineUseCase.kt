@@ -2,7 +2,6 @@ package org.bubbble.andsplash.shared.domain
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.bubbble.andsplash.shared.result.NoDataException
 import org.bubbble.andsplash.shared.result.Result
 
 /**
@@ -28,11 +27,11 @@ abstract class CoroutineUseCase<in P, R>(private val coroutineDispatcher: Corout
                 if (request != null) {
                     Result.Success(request)
                 } else {
-                    Result.Error(NoDataException)
+                    Result.Error("NoData")
                 }
             }
         } catch (e: Exception) {
-            Result.Error(e)
+            Result.Error("${e.message}")
         }
     }
 

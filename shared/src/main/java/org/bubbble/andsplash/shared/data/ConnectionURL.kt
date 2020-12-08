@@ -8,6 +8,7 @@ package org.bubbble.andsplash.shared.data
 
 object ConnectionURL {
 
+    const val UNSPLASH_API_BASE_URL = "https://api.unsplash.com/"
     const val UNSPLASH_JOIN_URL = "https://unsplash.com/join"
     const val UNSPLASH_URL = "https://unsplash.com/"
     const val UNSPLASH_LOGIN_CALLBACK = "unsplash-auth-callback"

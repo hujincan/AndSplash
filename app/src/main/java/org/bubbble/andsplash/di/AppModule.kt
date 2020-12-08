@@ -9,12 +9,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import org.bubbble.andsplash.shared.data.signin.AuthorizeRepository
-import org.bubbble.andsplash.shared.data.signin.DefaultAuthorizeRepository
+import org.bubbble.andsplash.shared.data.db.AppDatabase
 import org.bubbble.andsplash.shared.di.ApplicationScope
 import org.bubbble.andsplash.shared.di.DefaultDispatcher
-import org.bubbble.andsplash.shared.network.service.AuthorizeService
-import org.bubbble.andsplash.shared.util.PreferencesUtil
+import org.bubbble.andsplash.shared.util.logger
 import javax.inject.Singleton
 
 /**
@@ -25,11 +23,6 @@ import javax.inject.Singleton
 @Module
 class AppModule {
 
-//    @Singleton
-//    @Provides
-//    fun providePreferenceStorage(@ApplicationContext context: Context): PreferencesUtil =
-//        PreferencesUtil(context)
-
     @ApplicationScope
     @Singleton
     @Provides
@@ -37,10 +30,11 @@ class AppModule {
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
     ): CoroutineScope = CoroutineScope(SupervisorJob() + defaultDispatcher)
 
-
     @Singleton
     @Provides
-    fun provideAgendaRepository(service: AuthorizeService): AuthorizeRepository =
-        DefaultAuthorizeRepository(service)
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        logger("数据库正在初始化")
+        return AppDatabase.buildDatabase(context)
+    }
 
 }
