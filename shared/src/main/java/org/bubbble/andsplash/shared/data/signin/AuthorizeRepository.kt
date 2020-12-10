@@ -11,21 +11,23 @@ import retrofit2.Response
  * @date 2020/12/05 21:51
  */
 interface AuthorizeRepository {
-    suspend fun getAccessToken(code: String?): AccessToken?
+    suspend fun getAccessToken(code: String?): Boolean
 }
 
 class DefaultAuthorizeRepository(
     private val service: AuthorizeService,
     private val preferencesUtil: PreferencesUtil): AuthorizeRepository {
 
-    override suspend fun getAccessToken(code: String?): AccessToken? {
+    override suspend fun getAccessToken(code: String?): Boolean {
         val result = service.requestAccessToken(code)
-        if (result.isSuccessful) {
+        return if (result.isSuccessful) {
             result.body()?.let {
                 saveAccessToken(it)
             }
+            true
+        } else {
+            false
         }
-        return result.body()
     }
 
     private fun saveAccessToken(accessToken: AccessToken) {

@@ -7,6 +7,7 @@
     android:layout_marginEnd="@dimen/margin_normal"
     android:layout_marginTop="@dimen/margin_small"
     android:transitionName="@string/shared_element_search_box"
+    app:cardBackgroundColor="@color/transparent_surface"
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -56,7 +57,7 @@
             android:id="@+id/author_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="12dp"
+            android:padding="10dp"
             android:src="@drawable/ic_default_profile_avatar"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"

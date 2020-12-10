@@ -4,18 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.PopupWindow
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.appbar.AppBarLayout
 import org.bubbble.andsplash.R
 import org.bubbble.andsplash.databinding.FragmentPersonalBinding
 import org.bubbble.andsplash.databinding.ItemTabCountBinding
 import org.bubbble.andsplash.shared.util.logger
+import org.bubbble.andsplash.ui.MainActivityViewModel
+import org.bubbble.andsplash.ui.editor.EditUserActivity
 import org.bubbble.andsplash.ui.pictures.PictureFragment
 import org.bubbble.andsplash.ui.settings.SettingsActivity
+import org.bubbble.andsplash.util.executeAfter
+import org.bubbble.andsplash.util.load
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -27,6 +33,7 @@ import kotlin.math.min
 class PersonalFragment : Fragment() {
 
     private lateinit var binding: FragmentPersonalBinding
+    private val activityViewModel: MainActivityViewModel by activityViewModels()
     private var tabItemList = ArrayList<View>()
 
     override fun onCreateView(
@@ -83,7 +90,33 @@ class PersonalFragment : Fragment() {
                 }
                 popupMenu.show()
             }
+
+            accountName.setOnClickListener {
+                startActivity(Intent(context, EditUserActivity::class.java))
+            }
         }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        activityViewModel.currentUserInfo.observe(viewLifecycleOwner, { userEntity ->
+            userEntity.profile_image?.let {
+                binding.icon.load(it)
+            } ?: run {
+                binding.icon.load(R.drawable.ic_default_profile_avatar)
+            }
+
+            binding.name.text = userEntity.name
+            binding.accountName.text = userEntity.username
+
+            for ((index, tabItem) in tabItemList.withIndex()) {
+                when (index) {
+                    0 -> tabItem.findViewById<TextView>(R.id.count).text = userEntity.total_photos?.toString()
+                    1 -> tabItem.findViewById<TextView>(R.id.count).text = userEntity.total_likes?.toString()
+                    2 -> tabItem.findViewById<TextView>(R.id.count).text = userEntity.total_collections?.toString()
+                }
+            }
+        })
     }
 
     private fun addTabView(title: String, count: String): View {

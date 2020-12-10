@@ -11,3 +11,8 @@ import com.bumptech.glide.Glide
 fun ImageView.load(res: Int) {
     Glide.with(this).load(res).into(this)
 }
+
+
+fun ImageView.load(res: String) {
+    Glide.with(this).load(res).into(this)
+}

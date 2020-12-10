@@ -31,7 +31,7 @@ class CircleImageView(
         // 填充
         style = Paint.Style.FILL
         // 颜色
-        color = Color.WHITE
+        color = Color.TRANSPARENT
     }
     private var viewMatrix = Matrix()
     private var width = 0F
@@ -57,15 +57,15 @@ class CircleImageView(
 
     override fun onDraw(canvas: Canvas?) {
         if (drawable is BitmapDrawable) {
-            paintStroke.color = Color.WHITE
+            paintStroke.color = Color.TRANSPARENT
             canvas?.drawCircle(width / 2F, width / 2F, width / 2F, paintStroke)
-            paintStroke.color = Color.WHITE
+            paintStroke.color = Color.TRANSPARENT
             canvas?.drawCircle(width / 2F, width / 2F, width / 2F - paddingWidth, paintStroke)
             paint.shader = initBitmapShader(drawable as BitmapDrawable) // 将着色器设置给画笔
             canvas!!.drawCircle(
                 width / 2F,
                 width / 2F,
-                radius - strokeWidth - paddingWidth,
+                radius - strokeWidth - paddingWidth - paddingStart,
                 paint
             ) // 使用画笔在画布上画圆
             return
@@ -77,11 +77,12 @@ class CircleImageView(
     /**
      * 获取ImageView中资源图片的Bitmap，利用Bitmap初始化图片着色器,通过缩放矩阵将原资源图片缩放到铺满整个绘制区域，避免边界填充
      */
-    private fun initBitmapShader(drawable: BitmapDrawable): BitmapShader? {
+    private fun initBitmapShader(drawable: BitmapDrawable): BitmapShader {
         val bitmap = drawable.bitmap
         val bitmapShader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
-        val scale = (width / bitmap.width).coerceAtLeast(width / bitmap.height)
+        val scale = ((width - paddingStart - paddingEnd) / bitmap.width).coerceAtLeast((width - paddingStart - paddingEnd) / bitmap.height)
         viewMatrix.setScale(scale, scale)
+        viewMatrix.setTranslate(paddingStart.toFloat(), paddingStart.toFloat())
         bitmapShader.setLocalMatrix(viewMatrix)
         return bitmapShader
     }

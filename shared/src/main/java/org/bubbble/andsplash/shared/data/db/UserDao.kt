@@ -11,9 +11,13 @@ import androidx.room.Query
 
 @Dao
 interface UserDao {
+
+    @Query("SELECT * FROM userentity WHERE numeric_id = :currentUserId")
+    suspend fun getCurrentUser(currentUserId: Int): List<UserEntity>
+
     @Query("SELECT * FROM userentity")
     suspend fun getAll(): List<UserEntity>
 
     @Insert
-    suspend fun saveAll(user: UserEntity)
+    suspend fun setAll(user: UserEntity)
 }

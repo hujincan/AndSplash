@@ -34,7 +34,10 @@ class HelloActivity : AppCompatActivity() {
         })
 
         helloViewModel.navigateToSignInDialogAction.observe(this, EventObserver {
-            openSignInDialog()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("openSignIn", true)
+            startActivity(intent)
+            finish()
         })
         setContentView(binding.root)
     }
@@ -46,15 +49,4 @@ class HelloActivity : AppCompatActivity() {
     companion object {
         private const val DIALOG_SIGN_IN = "dialog_sign_in"
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == SignInDialogFragment.REQUEST_CODE_SIGN_IN) {
-            lifecycleScope.launch {
-//                helloViewModel.handleSignInResult(data)
-            }
-        }
-    }
-
 }

@@ -28,18 +28,18 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="@dimen/onboarding_margins" />
 
-<!--        <Button-->
-<!--            android:id="@+id/button_signin"-->
-<!--            style="?borderlessButtonStyle"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginEnd="@dimen/margin_normal"-->
-<!--            android:layout_marginTop="@dimen/margin_small"-->
-<!--            android:onClick="@{() -> viewModel.onSigninClicked()}"-->
-<!--            android:text="登录"-->
-<!--            app:goneUnless="@{!viewModel.observeSignedInUser}"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
+        <Button
+            android:id="@+id/button_signin"
+            style="?borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_small"
+            android:onClick="@{() -> viewModel.onSigninClicked()}"
+            android:text="登录"
+            app:goneUnless="@{!viewModel.observeSignedInUser}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/io_hashtag"

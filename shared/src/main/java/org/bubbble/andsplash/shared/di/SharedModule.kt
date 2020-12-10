@@ -34,8 +34,9 @@ class SharedModule {
     @Provides
     fun provideUserDataRepository(
         service: UserInfoService,
+        preferencesUtil: PreferencesUtil,
         appDatabase: AppDatabase
     ): UserDataRepository =
-        DefaultUserDataRepository(service, appDatabase)
+        DefaultUserDataRepository(service, preferencesUtil, appDatabase)
 
 }

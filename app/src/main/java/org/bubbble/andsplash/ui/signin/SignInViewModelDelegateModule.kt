@@ -6,7 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.bubbble.andsplash.shared.domain.auth.ObserveUserAuthStateCoroutineUseCase
+import org.bubbble.andsplash.shared.domain.auth.UserAuthSaveUseCase
 import org.bubbble.andsplash.shared.domain.user.UserInfoUpdateUseCase
 import javax.inject.Singleton
 
@@ -25,12 +25,12 @@ class SignInViewModelDelegateModule {
     @Singleton
     @Provides
     fun provideSignInViewModelDelegate(
-        observerUserAuthStateUseCase: ObserveUserAuthStateCoroutineUseCase,
+        userAuthSaveUseCase: UserAuthSaveUseCase,
         userInfoUpdateUseCase: UserInfoUpdateUseCase,
         @ApplicationContext context: Context
     ): SignInViewModelDelegate {
         return UnsplashSignInViewModelDelegate(
-            observerUserAuthStateUseCase = observerUserAuthStateUseCase,
+            userAuthSaveUseCase = userAuthSaveUseCase,
             userInfoUpdateUseCase = userInfoUpdateUseCase,
             context = context
         )

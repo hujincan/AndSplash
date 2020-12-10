@@ -49,16 +49,17 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:textAppearance="@style/TextAppearance.IOSched.AccountDialog.Username"
-                tools:text="User Name" />
+                tools:text="User Name"
+                app:username="@{viewModel.currentUserInfo}" />
 
-<!--            app:username="@{viewModel.currentUserInfo}"-->
             <TextView
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="1"
-                tools:text="user@email.com" />
-<!--            app:userEmail="@{viewModel.currentUserInfo}"-->
+                tools:text="user@email.com"
+                app:userEmail="@{viewModel.currentUserInfo}" />
+
         </LinearLayout>
 
         <ImageView
@@ -79,12 +80,11 @@
             style="@style/Widget.IOSched.AccountDialog.ManageAccountButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/manage_google_account"
+            android:text="@string/manage_unsplash_account_url"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/username_email_container"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MaterialComponents.Chip"
-            app:websiteLink="@{@string/manage_google_account_url}" />
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MaterialComponents.Chip" />
 
         <View
             android:id="@+id/divider1"

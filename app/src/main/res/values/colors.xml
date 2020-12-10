@@ -50,6 +50,7 @@
     <item name="chip_bg_alpha_checked" format="float" type="dimen">0.18</item>
 
     <color name="icon_tint">#5F6367</color>
+    <color name="transparent_surface">#f2ffffff</color>
 
     <integer-array name="swipe_refresh">
         <item>@color/deep_sky_blue</item>

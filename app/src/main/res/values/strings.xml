@@ -30,7 +30,7 @@
     <string name="privacy_policy_url" translatable="false">https://policies.google.com/privacy</string>
     <string name="oss_file" translatable="false">file:///android_asset/licenses.html</string>
 
-    <string name="manage_google_account_url" translatable="false">https://myaccount.google.com/</string>
+    <string name="manage_google_account_url" translatable="false">https://unsplash.com/account</string>
 
     <string name="firebase_auth_no_network_connection">未连接到互联网</string>
     <string name="firebase_auth_unknown_error">未知错误</string>
@@ -45,7 +45,7 @@
     <string name="settings_theme_dark">深色</string>
     <string name="settings_theme_battery">根据省电模式设置</string>
     <string name="sign_out">退出帐号</string>
-    <string name="manage_google_account">管理您的 Google 帐号</string>
+    <string name="manage_unsplash_account_url">编辑您的 Unsplash 帐号</string>
     <string name="welcome">欢迎！</string>
     <string name="sign_in">登录</string>
     <string name="cancel">取消</string>

@@ -14,12 +14,12 @@ import javax.inject.Inject
  * @date 2020/10/25 19:29
  */
 
-class ObserveUserAuthStateCoroutineUseCase @Inject constructor (
+class UserAuthSaveUseCase @Inject constructor (
     private val repository: AuthorizeRepository,
     @IoDispatcher dispatcher: CoroutineDispatcher
-) : CoroutineUseCase<String?, AccessToken?>(dispatcher) {
+) : CoroutineUseCase<String?, Boolean>(dispatcher) {
 
-    override suspend fun execute(parameters: String?): AccessToken?  {
+    override suspend fun execute(parameters: String?): Boolean {
         return repository.getAccessToken(parameters)
     }
 }

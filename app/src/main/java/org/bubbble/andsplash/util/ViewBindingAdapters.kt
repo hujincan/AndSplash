@@ -61,13 +61,13 @@ fun momentImageUrl(
     momentTheme: Theme?
 ) {
     when (momentTheme) {
-        Theme.DARK -> imageUri(imageView, momentImageUrlDarkTheme?.toUri(), null)
-        else -> imageUri(imageView, momentImageUrl?.toUri(), null)
+        Theme.DARK -> imageUri(imageView, momentImageUrlDarkTheme, null)
+        else -> imageUri(imageView, momentImageUrl, null)
     }
 }
 
 @BindingAdapter(value = ["imageUri", "placeholder"], requireAll = false)
-fun imageUri(imageView: ImageView, imageUri: Uri?, placeholder: Drawable?) {
+fun imageUri(imageView: ImageView, imageUri: String?, placeholder: Drawable?) {
     when (imageUri) {
         null -> {
             Glide.with(imageView)
@@ -85,7 +85,7 @@ fun imageUri(imageView: ImageView, imageUri: Uri?, placeholder: Drawable?) {
 
 @BindingAdapter(value = ["imageUrl", "placeholder"], requireAll = false)
 fun imageUrl(imageView: ImageView, imageUrl: String?, placeholder: Drawable?) {
-    imageUri(imageView, imageUrl?.toUri(), placeholder)
+    imageUri(imageView, imageUrl, placeholder)
 }
 
 /**

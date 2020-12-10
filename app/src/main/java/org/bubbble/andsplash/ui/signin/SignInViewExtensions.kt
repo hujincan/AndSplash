@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import org.bubbble.andsplash.R
-import org.bubbble.andsplash.shared.data.signin.AuthenticatedUserInfo
+import org.bubbble.andsplash.shared.data.db.UserEntity
 import org.bubbble.andsplash.ui.MainActivityViewModel
 import org.bubbble.andsplash.util.asGlideTarget
 
@@ -40,15 +40,6 @@ fun Toolbar.setupProfileMenuItem(
 //    viewModel.currentUserImageUri.observe(lifecycleOwner, {
 //        setProfileAvatar(context, target, it)
 //    })
-}
-
-fun setProfileContentDescription(item: MenuItem, res: Resources, user: AuthenticatedUserInfo?) {
-    val description = if (user?.isSignedIn() == true) {
-        res.getString(R.string.a11y_signed_in_content_description, user.getDisplayName())
-    } else {
-        res.getString(R.string.a11y_signed_out_content_description)
-    }
-    MenuItemCompat.setContentDescription(item, description)
 }
 
 fun setProfileAvatar(

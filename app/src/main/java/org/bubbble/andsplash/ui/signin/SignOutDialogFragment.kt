@@ -1,6 +1,7 @@
 package org.bubbble.andsplash.ui.signin
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,8 +17,10 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.bubbble.andsplash.databinding.FragmentSignOutDialogBinding
-import org.bubbble.andsplash.shared.data.signin.AuthenticatedUserInfo
+import org.bubbble.andsplash.shared.data.db.UserEntity
 import org.bubbble.andsplash.ui.MainActivityViewModel
+import org.bubbble.andsplash.ui.editor.EditUserActivity
+import org.bubbble.andsplash.util.executeAfter
 import org.bubbble.andsplash.util.signin.SignInHandler
 import javax.inject.Inject
 
@@ -49,8 +52,15 @@ class SignOutDialogFragment : AppCompatDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSignOutDialogBinding.inflate(layoutInflater, container, false)
-
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.manageAccount.setOnClickListener {
+            startActivity(Intent(context, EditUserActivity::class.java))
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -58,10 +68,14 @@ class SignOutDialogFragment : AppCompatDialogFragment() {
         signInViewModel.performSignInEvent.observe(viewLifecycleOwner, { request ->
             if (request.peekContent() == SignInEvent.RequestSignOut) {
                 request.getContentIfNotHandled()
-
                 dismiss()
             }
         })
+
+        binding.executeAfter {
+            viewModel = signInViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
 
         if (showsDialog) {
             (requireDialog() as AlertDialog).setView(binding.root)
@@ -70,15 +84,15 @@ class SignOutDialogFragment : AppCompatDialogFragment() {
 }
 
 @BindingAdapter("username")
-fun setUsername(textView: TextView, userInfo: AuthenticatedUserInfo) {
-    val displayName = userInfo.getDisplayName()
+fun setUsername(textView: TextView, userInfo: UserEntity) {
+    val displayName = userInfo.name
     textView.text = displayName
     textView.isGone = displayName.isNullOrEmpty()
 }
 
 @BindingAdapter("userEmail")
-fun setUserEmail(textView: TextView, userInfo: AuthenticatedUserInfo) {
-    val email = userInfo.getEmail()
+fun setUserEmail(textView: TextView, userInfo: UserEntity) {
+    val email = userInfo.email
     textView.text = email
     textView.isGone = email.isNullOrEmpty()
 }

@@ -21,20 +21,7 @@ class LaunchViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     val launchDestination = liveData {
-        appDatabase.userDao().saveAll(UserEntity(
-            1,
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            2,
-            3,
-            4,
-            "test",
-        ))
+
         val result = onLaunchUseCase(Unit)
         if (result.data == false) {
             emit(Event(LaunchDestination.HELLO_ACTIVITY))

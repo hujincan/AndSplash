@@ -1,12 +1,11 @@
 package org.bubbble.andsplash.ui.signin
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.bubbble.andsplash.model.AccessToken
-import org.bubbble.andsplash.shared.domain.auth.ObserveUserAuthStateCoroutineUseCase
+import org.bubbble.andsplash.shared.data.db.UserEntity
+import org.bubbble.andsplash.shared.domain.auth.UserAuthSaveUseCase
 import org.bubbble.andsplash.shared.domain.user.UserInfoUpdateUseCase
 import org.bubbble.andsplash.shared.result.Event
 import org.bubbble.andsplash.shared.result.data
@@ -23,17 +22,13 @@ enum class SignInEvent {
 
 interface SignInViewModelDelegate {
 
-    val currentUserInfo: LiveData<AccessToken>
+    val currentUserInfo: LiveData<UserEntity>
 
-    val resultTest: LiveData<String?>
-    /**
-     * Live updated value of the current firebase users image url
-     */
-    val currentUserImageUri: LiveData<Uri?>
+    val currentUserImageUri: LiveData<String?>
 
     fun isSignedIn(): Boolean
 
-    suspend fun handleSignInResult(data: String?)
+    suspend fun handleSignInResult(code: String?)
 
     fun onSignIn()
 
@@ -45,35 +40,38 @@ interface SignInViewModelDelegate {
 }
 
 internal class UnsplashSignInViewModelDelegate @Inject constructor(
-    private val observerUserAuthStateUseCase: ObserveUserAuthStateCoroutineUseCase,
+    private val userAuthSaveUseCase: UserAuthSaveUseCase,
     private val userInfoUpdateUseCase: UserInfoUpdateUseCase,
     @ApplicationContext val context: Context
 ) : SignInViewModelDelegate {
 
-    private val _currentUserInfo = MutableLiveData<AccessToken>()
-    override val currentUserInfo: LiveData<AccessToken>
+    private val _currentUserInfo = MutableLiveData<UserEntity>()
+    override val currentUserInfo: LiveData<UserEntity>
         get() = _currentUserInfo
 
-    private val _currentUserImageUri = MutableLiveData<Uri?>()
-    override val currentUserImageUri: LiveData<Uri?>
+    private val _currentUserImageUri = MutableLiveData<String?>()
+    override val currentUserImageUri: LiveData<String?>
         get() = _currentUserImageUri
 
-    private val _resultTest = MutableLiveData<String?>()
-    override val resultTest: LiveData<String?>
-        get() = _resultTest
-
-    override suspend fun handleSignInResult(data: String?) {
-        val fine = observerUserAuthStateUseCase(data).data
-        fine?.let {
-            userInfoUpdateUseCase(Unit)
+    override suspend fun handleSignInResult(code: String?) {
+        if (code == null) {
+            userInfoUpdateUseCase(Unit).data?.let {
+                _currentUserInfo.value = it
+                _currentUserImageUri.value = it.profile_image
+                _currentIsSignedIn.value = true
+            }
+        } else if (userAuthSaveUseCase(code).data == true){
+            userInfoUpdateUseCase(Unit).data?.let {
+                _currentUserInfo.value = it
+                _currentUserImageUri.value = it.profile_image
+                _currentIsSignedIn.value = true
+            }
         }
-        _resultTest.value = "access_token：${fine?.access_token} \n token_type：${fine?.token_type} \n scope：${fine?.scope} \n created_at：${fine?.created_at}"
     }
 
     override val performSignInEvent = MutableLiveData<Event<SignInEvent>>()
 
     override fun onSignIn() {
-        Log.e("AND", "onSignIn")
         performSignInEvent.value = Event(SignInEvent.RequestSignIn)
     }
 

@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import org.bubbble.andsplash.shared.data.db.AppDatabase
+import org.bubbble.andsplash.shared.data.db.UserEntity
 import org.bubbble.andsplash.shared.di.IoDispatcher
 import org.bubbble.andsplash.shared.domain.CoroutineUseCase
 import org.bubbble.andsplash.shared.util.PreferencesUtil
@@ -15,6 +16,7 @@ import javax.inject.Inject
  */
 class OnLaunchCoroutineUseCase @Inject constructor(
     private val preferencesUtil: PreferencesUtil,
+    private val appDatabase: AppDatabase,
     // 看到这里的 @IoDispatcher 了吗，这里其实最终依赖的实例是 Dispatchers.IO
     @IoDispatcher dispatcher: CoroutineDispatcher
 
@@ -23,7 +25,6 @@ class OnLaunchCoroutineUseCase @Inject constructor(
 ) : CoroutineUseCase<Unit, Boolean>(dispatcher) {
 
     override suspend fun execute(parameters: Unit): Boolean {
-
         return preferencesUtil.get("skip", false)
     }
 }

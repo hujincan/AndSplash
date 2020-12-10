@@ -2,6 +2,7 @@ package org.bubbble.andsplash.shared.domain.user
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.bubbble.andsplash.model.user.UserInfo
+import org.bubbble.andsplash.shared.data.db.UserEntity
 import org.bubbble.andsplash.shared.data.user.UserDataRepository
 import org.bubbble.andsplash.shared.di.IoDispatcher
 import org.bubbble.andsplash.shared.domain.CoroutineUseCase
@@ -14,9 +15,9 @@ import javax.inject.Inject
 class UserInfoUpdateUseCase @Inject constructor(
     private val repository: UserDataRepository,
     @IoDispatcher dispatcher: CoroutineDispatcher
-) : CoroutineUseCase<Unit, UserInfo?>(dispatcher) {
+) : CoroutineUseCase<Unit, UserEntity?>(dispatcher) {
 
-    override suspend fun execute(parameters: Unit): UserInfo? {
+    override suspend fun execute(parameters: Unit): UserEntity? {
         return repository.getUserInfo()
     }
 }

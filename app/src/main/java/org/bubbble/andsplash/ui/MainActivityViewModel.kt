@@ -22,6 +22,11 @@ class MainActivityViewModel @ViewModelInject constructor(
     val navigateToSignOutDialogAction: LiveData<Event<Unit>>
         get() = _navigateToSignOutDialogAction
 
+    init {
+        viewModelScope.launch {
+            handleSignInResult(null)
+        }
+    }
 
     fun onProfileClicked() {
         if (isSignedIn()) {

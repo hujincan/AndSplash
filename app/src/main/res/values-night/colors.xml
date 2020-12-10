@@ -25,6 +25,7 @@
 
     <!-- In dark mode without light status bar we can use transparent -->
     <color name="status_bar_scrim">@color/transparent</color>
+    <color name="transparent_surface">#f236373a</color>
 
     <!-- Other colors with light mode alternatives -->
     <color name="wifi_card_background">#263238</color>

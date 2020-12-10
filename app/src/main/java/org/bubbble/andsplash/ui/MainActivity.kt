@@ -15,6 +15,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.navigation.NavController
@@ -27,12 +28,14 @@ import org.bubbble.andsplash.R
 import org.bubbble.andsplash.databinding.ActivityMainBinding
 import org.bubbble.andsplash.shared.data.ConnectionURL
 import org.bubbble.andsplash.shared.result.EventObserver
+import org.bubbble.andsplash.shared.util.logger
 import org.bubbble.andsplash.ui.personal.PersonalFragment
 import org.bubbble.andsplash.ui.pictures.PictureFragment
 import org.bubbble.andsplash.ui.search.SearchActivity
 import org.bubbble.andsplash.ui.signin.SignInDialogFragment
 import org.bubbble.andsplash.ui.signin.SignOutDialogFragment
 import org.bubbble.andsplash.util.Utils
+import org.bubbble.andsplash.util.load
 import javax.inject.Inject
 
 
@@ -85,7 +88,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         window.sharedElementsUseOverlay = false
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
@@ -114,9 +116,18 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             viewModel.onProfileClicked()
         }
 
-        viewModel.resultTest.observe(this, {
-            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-        })
+        viewModel.currentUserImageUri.observe(this, Observer<String?> {
+                binding.searchBox.authorIcon.load(it)
+            }
+        )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (intent.getBooleanExtra("openSignIn", false)) {
+            intent.removeExtra("openSignIn")
+            openSignInDialog()
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -206,9 +217,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun openSignOutDialog() {
+        logger("打开登出窗口")
         SignOutDialogFragment().show(supportFragmentManager, DIALOG_SIGN_OUT)
     }
-
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)

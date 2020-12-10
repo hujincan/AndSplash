@@ -71,6 +71,7 @@ dependencies {
     implementation project(path: ':shared')
     implementation project(path: ':model')
     implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     //Kotlin Coroutines
     def coroutines_android_version = '1.3.9'
