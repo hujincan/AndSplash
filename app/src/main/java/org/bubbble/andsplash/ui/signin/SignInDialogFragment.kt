@@ -8,15 +8,14 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.bubbble.andsplash.databinding.SignInDialogFragmentBinding
 import org.bubbble.andsplash.shared.data.ConnectionURL
-import org.bubbble.andsplash.util.signin.SignInHandler
 import org.bubbble.andsplash.shared.result.EventObserver
 import org.bubbble.andsplash.util.CustomTabUtil
 import org.bubbble.andsplash.util.executeAfter
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SignInDialogFragment : AppCompatDialogFragment() {
@@ -38,6 +37,21 @@ class SignInDialogFragment : AppCompatDialogFragment() {
 
         binding = SignInDialogFragmentBinding.inflate(layoutInflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val adapter = NotCurrentAccountAdapter {
+            binding.userName.text = it.name
+            binding.userEmail.text = it.email
+        }
+        binding.accountList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.accountList.adapter = adapter
+
+        signInViewModel.notCurrentAccounts.observe(this, {
+            adapter.submitList(it)
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -22,4 +22,5 @@ data class UserEntity (
     val total_likes: Int?,
     val total_photos: Int?,
     val email: String?,
+    val access_token: String
 )

@@ -1,5 +1,6 @@
 package org.bubbble.andsplash.util
 
+import android.net.Uri
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 
@@ -12,7 +13,10 @@ fun ImageView.load(res: Int) {
     Glide.with(this).load(res).into(this)
 }
 
-
 fun ImageView.load(res: String) {
+    Glide.with(this).load(res).into(this)
+}
+
+fun ImageView.load(res: Uri?) {
     Glide.with(this).load(res).into(this)
 }

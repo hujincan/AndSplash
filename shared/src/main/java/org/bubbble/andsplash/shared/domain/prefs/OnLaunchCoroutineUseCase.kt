@@ -16,7 +16,6 @@ import javax.inject.Inject
  */
 class OnLaunchCoroutineUseCase @Inject constructor(
     private val preferencesUtil: PreferencesUtil,
-    private val appDatabase: AppDatabase,
     // 看到这里的 @IoDispatcher 了吗，这里其实最终依赖的实例是 Dispatchers.IO
     @IoDispatcher dispatcher: CoroutineDispatcher
 

@@ -1,8 +1,6 @@
 package org.bubbble.andsplash.shared.data.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 /**
  * @author Andrew
@@ -18,6 +16,18 @@ interface UserDao {
     @Query("SELECT * FROM userentity")
     suspend fun getAll(): List<UserEntity>
 
+    @Query("SELECT * FROM userentity WHERE numeric_id NOT IN(:currentUserId)")
+    suspend fun getNotCurrentAll(currentUserId: Int): List<UserEntity>
+
+    @Query("SELECT COUNT(numeric_id) FROM userentity WHERE numeric_id = :currentUserId")
+    suspend fun getUserExistById(currentUserId: Int): Int
+
     @Insert
-    suspend fun setAll(user: UserEntity)
+    suspend fun setAll(vararg user: UserEntity)
+
+    @Update
+    suspend fun updateCurrentUser(vararg user: UserEntity)
+
+    @Query("DELETE FROM userentity WHERE numeric_id = (:currentUserId)")
+    suspend fun removeUserById(currentUserId: Int)
 }

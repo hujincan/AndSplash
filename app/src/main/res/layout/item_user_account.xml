@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.bubbble.andsplash.widget.CircleImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:id="@+id/author_icon"
+    android:layout_margin="@dimen/margin_small"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:strokeWidth="2dp"
+    app:strokeColor="@color/color_primary">
+
+</org.bubbble.andsplash.widget.CircleImageView>

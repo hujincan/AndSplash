@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import org.bubbble.andsplash.shared.data.db.AppDatabase
 import org.bubbble.andsplash.shared.data.signin.AuthorizeRepository
 import org.bubbble.andsplash.shared.data.signin.DefaultAuthorizeRepository
@@ -35,8 +36,9 @@ class SharedModule {
     fun provideUserDataRepository(
         service: UserInfoService,
         preferencesUtil: PreferencesUtil,
-        appDatabase: AppDatabase
+        appDatabase: AppDatabase,
+        @IoDispatcher dispatcher: CoroutineDispatcher
     ): UserDataRepository =
-        DefaultUserDataRepository(service, preferencesUtil, appDatabase)
+        DefaultUserDataRepository(service, preferencesUtil, appDatabase, dispatcher)
 
 }

@@ -3,10 +3,12 @@ package org.bubbble.andsplash.util
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ContentResolver
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Insets
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
@@ -120,4 +122,15 @@ object Utils {
         clipboard.setPrimaryClip(ClipData.newPlainText("text", text))
     }
 
+    /**
+     * resource转Uri
+     */
+    fun getUriFromDrawableRes(context: Context, id: Int): Uri? {
+        val resources = context.resources
+        val path = (ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
+                + resources.getResourcePackageName(id) + "/"
+                + resources.getResourceTypeName(id) + "/"
+                + resources.getResourceEntryName(id))
+        return Uri.parse(path)
+    }
 }

@@ -31,12 +31,13 @@ class CircleImageView(
         // 填充
         style = Paint.Style.FILL
         // 颜色
-        color = Color.TRANSPARENT
+        color = strokeColor
     }
     private var viewMatrix = Matrix()
     private var width = 0F
     private var height = 0F
     private var radius = 0F
+    private var strokeColor = Color.TRANSPARENT
     private var strokeWidth = 0F
     private var paddingWidth = 0F.dp
 
@@ -45,6 +46,7 @@ class CircleImageView(
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
         strokeWidth = typeArray.getDimension(R.styleable.CircleImageView_strokeWidth, 0F)
         paddingWidth = typeArray.getDimension(R.styleable.CircleImageView_strokeWidth, 0F)
+        strokeColor = typeArray.getColor(R.styleable.CircleImageView_strokeColor, Color.TRANSPARENT)
         typeArray.recycle()
     }
 
@@ -57,10 +59,12 @@ class CircleImageView(
 
     override fun onDraw(canvas: Canvas?) {
         if (drawable is BitmapDrawable) {
-            paintStroke.color = Color.TRANSPARENT
-            canvas?.drawCircle(width / 2F, width / 2F, width / 2F, paintStroke)
-            paintStroke.color = Color.TRANSPARENT
-            canvas?.drawCircle(width / 2F, width / 2F, width / 2F - paddingWidth, paintStroke)
+            if (strokeWidth > 0) {
+                paintStroke.color = strokeColor
+                canvas?.drawCircle(width / 2F, width / 2F, width / 2F, paintStroke)
+                paintStroke.color = Color.WHITE
+                canvas?.drawCircle(width / 2F, width / 2F, width / 2F - paddingWidth, paintStroke)
+            }
             paint.shader = initBitmapShader(drawable as BitmapDrawable) // 将着色器设置给画笔
             canvas!!.drawCircle(
                 width / 2F,

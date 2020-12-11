@@ -17,9 +17,11 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.bubbble.andsplash.databinding.FragmentSignOutDialogBinding
+import org.bubbble.andsplash.shared.data.ConnectionURL
 import org.bubbble.andsplash.shared.data.db.UserEntity
 import org.bubbble.andsplash.ui.MainActivityViewModel
 import org.bubbble.andsplash.ui.editor.EditUserActivity
+import org.bubbble.andsplash.util.CustomTabUtil
 import org.bubbble.andsplash.util.executeAfter
 import org.bubbble.andsplash.util.signin.SignInHandler
 import javax.inject.Inject
@@ -60,6 +62,13 @@ class SignOutDialogFragment : AppCompatDialogFragment() {
 
         binding.manageAccount.setOnClickListener {
             startActivity(Intent(context, EditUserActivity::class.java))
+        }
+
+        binding.addAccount.setOnClickListener {
+            activity?.let { activity ->
+                CustomTabUtil.open(activity, ConnectionURL.LOGIN_URL)
+            }
+            dismiss()
         }
     }
 

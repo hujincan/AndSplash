@@ -17,6 +17,7 @@
 package org.bubbble.andsplash.shared.domain
 
 import androidx.lifecycle.MediatorLiveData
+import org.bubbble.andsplash.shared.result.Result
 
 /**
  * Executes business logic in its execute method and keep posting updates to the result as
@@ -24,6 +25,12 @@ import androidx.lifecycle.MediatorLiveData
  * Handling an exception (emit [Result.Error] to the result) is the subclasses's responsibility.
  */
 abstract class MediatorUseCase<in P, R> {
+
+    suspend operator fun invoke(parameters: P): MediatorLiveData<Result<R>> {
+        execute(parameters)
+        return result
+    }
+
     protected val result = MediatorLiveData<Result<R>>()
 
     // Make this as open so that mock instances can mock this method
@@ -31,5 +38,5 @@ abstract class MediatorUseCase<in P, R> {
         return result
     }
 
-    abstract fun execute(parameters: P)
+    abstract suspend fun execute(parameters: P)
 }

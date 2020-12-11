@@ -217,7 +217,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun openSignOutDialog() {
-        logger("打开登出窗口")
         SignOutDialogFragment().show(supportFragmentManager, DIALOG_SIGN_OUT)
     }
 
