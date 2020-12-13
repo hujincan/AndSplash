@@ -10,8 +10,8 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "userentity", indices = [Index(value = ["numeric_id"], unique = true)])
 data class UserEntity (
-    @PrimaryKey val numeric_id: Int,
-    val username: String,
+    @PrimaryKey val numeric_id: Int?,
+    val username: String?,
     val name: String?,
     val first_name: String?,
     val last_name: String?,
@@ -22,5 +22,23 @@ data class UserEntity (
     val total_likes: Int?,
     val total_photos: Int?,
     val email: String?,
-    val access_token: String
-)
+    val access_token: String?
+) {
+    companion object {
+        fun getDefault() = UserEntity(
+            null,
+            "请先登录",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            0,
+            0,
+            0,
+            "请先登录",
+            null
+        )
+    }
+}

@@ -7,7 +7,9 @@ import org.bubbble.andsplash.shared.data.db.UserEntity
 import org.bubbble.andsplash.shared.domain.auth.UserAuthSaveUseCase
 import org.bubbble.andsplash.shared.domain.user.UserInfoUpdateUseCase
 import org.bubbble.andsplash.shared.result.Event
+import org.bubbble.andsplash.shared.result.Result
 import org.bubbble.andsplash.shared.result.data
+import org.bubbble.andsplash.shared.util.logger
 import javax.inject.Inject
 
 /**
@@ -29,15 +31,19 @@ interface SignInViewModelDelegate {
 
     fun isSignedIn(): Boolean
 
-    suspend fun handleSignInResult(code: String?)
+    fun handleSignInResult(): LiveData<UserEntity?>
+
+    suspend fun updateUserInfo(code: String?)
 
     fun onSignIn()
 
-    fun onSignOut()
+    suspend fun onSignOut()
 
     fun observeSignedInUser(): LiveData<Boolean>
 
     val performSignInEvent: MutableLiveData<Event<SignInEvent>>
+
+    suspend fun switchUserInfo(currentUserId: Int, accessToken: String)
 }
 
 /**
@@ -61,33 +67,46 @@ internal class UnsplashSignInViewModelDelegate @Inject constructor(
     override val currentUserImageUri: LiveData<String?>
         get() = _currentUserImageUri
 
-    override suspend fun handleSignInResult(code: String?) {
-        // 如果code不是null 并且 正确拿到token。则更新用户数据
-        if (code != null && userAuthSaveUseCase(code).data != true) {
-            return
+    override fun handleSignInResult(): LiveData<UserEntity?> {
+
+        return userInfoUpdateUseCase.observe().map {
+            (it as? Result.Success)?.data
         }
-        updateUserInfo()
     }
 
-    private suspend fun updateUserInfo() {
-        userInfoUpdateUseCase(Unit).map { result ->
-            result.data?.let {
-                _currentUserInfo.value = it
-                _currentUserImageUri.value = it.profile_image
-                _currentIsSignedIn.value = true
-                _currentUserId.value = it.numeric_id
-            }
+    override suspend fun updateUserInfo(code: String?) {
+        // 如果code不是null 并且 正确拿到token。则更新用户数据
+        if (code != null && userAuthSaveUseCase(code).data != true) {
+            _currentIsSignedIn.value = false
+            return
+        }
+
+        userInfoUpdateUseCase(Unit).data?.let {
+            _currentUserInfo.value = it
+            _currentUserImageUri.value = it.profile_image
+            _currentIsSignedIn.value = it.numeric_id != null
+            _currentUserId.value = it.numeric_id
         }
     }
 
     override val performSignInEvent = MutableLiveData<Event<SignInEvent>>()
 
+    override suspend fun switchUserInfo(currentUserId: Int, accessToken: String) {
+        userInfoUpdateUseCase.switchAccount(currentUserId, accessToken)
+        updateUserInfo(null)
+    }
+
     override fun onSignIn() {
         performSignInEvent.value = Event(SignInEvent.RequestSignIn)
     }
 
-    override fun onSignOut() {
-        performSignInEvent.value = Event(SignInEvent.RequestSignOut)
+    override suspend fun onSignOut() {
+        currentUserId.value?.let {
+            performSignInEvent.value = Event(SignInEvent.RequestSignOut)
+            userInfoUpdateUseCase.signOut(it)
+        }
+        _currentIsSignedIn.value = false
+        updateUserInfo(null)
     }
 
     private val _currentIsSignedIn = MutableLiveData<Boolean>()

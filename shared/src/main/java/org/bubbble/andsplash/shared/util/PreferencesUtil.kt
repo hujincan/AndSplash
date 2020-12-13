@@ -55,6 +55,17 @@ class PreferencesUtil @Inject constructor(
         return value?:defValue
     }
 
+    fun remove(key: String) {
+        val mShareConfig = PreferenceManager.getDefaultSharedPreferences(context)
+        remove(mShareConfig, key)
+    }
+
+    private fun remove(mShareConfig: SharedPreferences, key: String) {
+        val conEdit = mShareConfig.edit()
+        conEdit.remove(key)
+        conEdit.apply()
+    }
+
     /**
      * object not null
      */

@@ -1,6 +1,5 @@
 package org.bubbble.andsplash.shared.data.user
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -18,7 +17,9 @@ import org.bubbble.andsplash.shared.util.logger
  * @date 2020/12/08 15:09
  */
 interface UserDataRepository {
-    suspend fun getUserInfo(): LiveData<UserEntity?>
+    suspend fun getUserInfo(): MutableLiveData<UserEntity>
+    suspend fun removeUserInfo(currentUserId: Int)
+    suspend fun switchUserInfo(currentUserId: Int, accessToken: String)
 }
 
 class DefaultUserDataRepository(
@@ -28,14 +29,16 @@ class DefaultUserDataRepository(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ): UserDataRepository {
 
-    override suspend fun getUserInfo(): LiveData<UserEntity?> {
+    override suspend fun getUserInfo(): MutableLiveData<UserEntity> {
 
         val result: MutableLiveData<UserEntity> by lazy {
             MutableLiveData<UserEntity>()
         }
 
         withContext(dispatcher) {
-            val userRequest = appDatabase.userDao().getCurrentUser(preferencesUtil.get(BuildConfig.CURRENT_USER_ID, -1))
+            logger("test")
+            val id = preferencesUtil.get(BuildConfig.CURRENT_USER_ID, -1)
+            val userRequest = appDatabase.userDao().getCurrentUser(id)
 
             // 从数据库读取
             if (userRequest.isNotEmpty()) {
@@ -44,11 +47,12 @@ class DefaultUserDataRepository(
 
             // 从网络获取并更新到数据库
             val token = preferencesUtil.get(BuildConfig.ACCESS_TOKEN, "")
+            logger("token: $token")
             if (token.isNotEmpty()) {
                 val request = service.requestUserInfo()
                 if (request.isSuccessful) {
                     request.body()?.let {
-                        result.postValue(saveUserInfo(it, token, userRequest))
+                        result.postValue(saveUserInfo(it, token, userRequest, id))
                     }
                 }
             }
@@ -56,7 +60,7 @@ class DefaultUserDataRepository(
         return result
     }
 
-    private suspend fun saveUserInfo(userInfo: UserInfo, token: String, userRequest: List<UserEntity>): UserEntity {
+    private suspend fun saveUserInfo(userInfo: UserInfo, token: String, userRequest: List<UserEntity>, id: Int): UserEntity {
         preferencesUtil.put(BuildConfig.CURRENT_USER_ID, userInfo.numeric_id)
         val data = UserEntity(
             userInfo.numeric_id,
@@ -74,7 +78,7 @@ class DefaultUserDataRepository(
             token
         )
 
-        if (userRequest.isEmpty()) {
+        if (userRequest.isEmpty() || id != userInfo.numeric_id) {
             // 数据库内不存在 -> 保存到数据库
             appDatabase.userDao().updateCurrentUser(data)
             appDatabase.userDao().setAll(data)
@@ -84,5 +88,29 @@ class DefaultUserDataRepository(
         }
 
         return data
+    }
+
+    override suspend fun removeUserInfo(currentUserId: Int) {
+        appDatabase.userDao().removeUserById(currentUserId)
+        preferencesUtil.run {
+            remove(BuildConfig.CURRENT_USER_ID)
+            remove(BuildConfig.ACCESS_TOKEN)
+            remove(BuildConfig.TOKEN_TYPE)
+            remove(BuildConfig.SCOPE)
+            remove(BuildConfig.CREATED_AT)
+        }
+    }
+
+    override suspend fun switchUserInfo(currentUserId: Int, accessToken: String) {
+        preferencesUtil.run {
+            remove(BuildConfig.CURRENT_USER_ID)
+            remove(BuildConfig.ACCESS_TOKEN)
+            remove(BuildConfig.TOKEN_TYPE)
+            remove(BuildConfig.SCOPE)
+            remove(BuildConfig.CREATED_AT)
+
+            put(BuildConfig.CURRENT_USER_ID, currentUserId)
+            put(BuildConfig.ACCESS_TOKEN, accessToken)
+        }
     }
 }

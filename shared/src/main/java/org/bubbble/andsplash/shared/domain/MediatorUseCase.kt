@@ -17,7 +17,9 @@
 package org.bubbble.andsplash.shared.domain
 
 import androidx.lifecycle.MediatorLiveData
+import kotlinx.coroutines.withContext
 import org.bubbble.andsplash.shared.result.Result
+import org.bubbble.andsplash.shared.util.logger
 
 /**
  * Executes business logic in its execute method and keep posting updates to the result as
@@ -26,9 +28,18 @@ import org.bubbble.andsplash.shared.result.Result
  */
 abstract class MediatorUseCase<in P, R> {
 
-    suspend operator fun invoke(parameters: P): MediatorLiveData<Result<R>> {
-        execute(parameters)
-        return result
+    suspend operator fun invoke(parameters: P): Result<R> {
+        logger("先")
+        return try {
+            val request = execute(parameters)
+            if (request != null) {
+                Result.Success(request)
+            } else {
+                Result.Error("NoData")
+            }
+        } catch (e: Exception) {
+            Result.Error("${e.message}")
+        }
     }
 
     protected val result = MediatorLiveData<Result<R>>()
@@ -38,5 +49,5 @@ abstract class MediatorUseCase<in P, R> {
         return result
     }
 
-    abstract suspend fun execute(parameters: P)
+    abstract suspend fun execute(parameters: P): R
 }

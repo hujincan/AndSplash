@@ -30,7 +30,7 @@ class DefaultAuthorizeRepository(
         }
     }
 
-    private fun saveAccessToken(accessToken: AccessToken) {
+    private suspend fun saveAccessToken(accessToken: AccessToken) {
         preferencesUtil.run {
             put(BuildConfig.ACCESS_TOKEN, accessToken.access_token)
             put(BuildConfig.TOKEN_TYPE, accessToken.token_type)

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -14,6 +15,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.bubbble.andsplash.databinding.SignInDialogFragmentBinding
 import org.bubbble.andsplash.shared.data.ConnectionURL
 import org.bubbble.andsplash.shared.result.EventObserver
+import org.bubbble.andsplash.shared.util.logger
+import org.bubbble.andsplash.ui.MainActivityViewModel
 import org.bubbble.andsplash.util.CustomTabUtil
 import org.bubbble.andsplash.util.executeAfter
 
@@ -21,6 +24,7 @@ import org.bubbble.andsplash.util.executeAfter
 class SignInDialogFragment : AppCompatDialogFragment() {
 
     private val signInViewModel: SignInDialogViewModel by viewModels()
+    private val activityViewModel: MainActivityViewModel by activityViewModels()
 
     private lateinit var binding: SignInDialogFragmentBinding
 
@@ -46,12 +50,34 @@ class SignInDialogFragment : AppCompatDialogFragment() {
             binding.userName.text = it.name
             binding.userEmail.text = it.email
         }
-        binding.accountList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.accountList.adapter = adapter
+
+        binding.run {
+            accountList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            accountList.adapter = adapter
+
+            switchAccount.setOnClickListener {
+                adapter.currentUserEntity.numeric_id?.let { it1 -> adapter.currentUserEntity.access_token?.let { it2 ->
+                    activityViewModel.switchUser(it1,
+                        it2
+                    )
+                } }
+            }
+
+            signInViewModel.hasOtherAccount.observe(viewLifecycleOwner, {
+                if (it) {
+                    accountList.visibility = View.VISIBLE
+                    accountGroup.visibility = View.VISIBLE
+                } else {
+                    accountList.visibility = View.GONE
+                    accountGroup.visibility = View.GONE
+                }
+            })
+        }
 
         signInViewModel.notCurrentAccounts.observe(this, {
             adapter.submitList(it)
         })
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

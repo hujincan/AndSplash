@@ -117,7 +117,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         }
 
         viewModel.currentUserImageUri.observe(this, Observer<String?> {
-                binding.searchBox.authorIcon.load(it)
+                it?.let {
+                    binding.searchBox.authorIcon.load(it)
+                } ?: run {
+                    binding.searchBox.authorIcon.load(R.drawable.ic_default_profile_avatar)
+                }
+
             }
         )
     }
@@ -227,9 +232,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         ) {
             val code = intent.data?.getQueryParameter("code")
             Utils.copyText(this, code)
-            lifecycleScope.launch {
-                viewModel.handleSignInResult(code)
-            }
+            viewModel.signIn(code)
         }
     }
 }

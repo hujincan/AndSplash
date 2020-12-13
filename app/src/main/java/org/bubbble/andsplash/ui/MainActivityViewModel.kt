@@ -3,6 +3,7 @@ package org.bubbble.andsplash.ui
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
+import org.bubbble.andsplash.shared.data.db.UserEntity
 import org.bubbble.andsplash.shared.result.Event
 import org.bubbble.andsplash.ui.signin.SignInViewModelDelegate
 
@@ -22,9 +23,12 @@ class MainActivityViewModel @ViewModelInject constructor(
     val navigateToSignOutDialogAction: LiveData<Event<Unit>>
         get() = _navigateToSignOutDialogAction
 
+    val userInfoResult: LiveData<UserEntity?>
+
     init {
+        userInfoResult = handleSignInResult()
         viewModelScope.launch {
-            handleSignInResult(null)
+            updateUserInfo(null)
         }
     }
 
@@ -33,6 +37,24 @@ class MainActivityViewModel @ViewModelInject constructor(
             _navigateToSignOutDialogAction.value = Event(Unit)
         } else {
             _navigateToSignInDialogAction.value = Event(Unit)
+        }
+    }
+
+    fun signOut() {
+        viewModelScope.launch {
+            onSignOut()
+        }
+    }
+
+    fun switchUser(currentUserId: Int, accessToken: String) {
+        viewModelScope.launch {
+            switchUserInfo(currentUserId, accessToken)
+        }
+    }
+
+    fun signIn(code: String?) {
+        viewModelScope.launch {
+            updateUserInfo(code)
         }
     }
 }

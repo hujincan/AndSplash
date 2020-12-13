@@ -7,6 +7,7 @@ import org.bubbble.andsplash.shared.data.db.UserEntity
 import org.bubbble.andsplash.shared.domain.user.NotCurrentUserInfoUseCase
 import org.bubbble.andsplash.shared.result.Event
 import org.bubbble.andsplash.shared.result.data
+import org.bubbble.andsplash.shared.util.logger
 
 class SignInDialogViewModel @ViewModelInject constructor(
     signInViewModelDelegate: SignInViewModelDelegate,
@@ -21,17 +22,23 @@ class SignInDialogViewModel @ViewModelInject constructor(
         _dismissDialogAction.value = Event(Unit)
     }
 
-    var hasOtherAccount = false
+    val hasOtherAccount = MutableLiveData<Boolean>()
 
     private val observer = Observer<Int> {
         viewModelScope.launch {
-            currentUserId.value?.let { id ->
-                notCurrentUserInfoUseCase(id).data?.let {
+            logger(currentUserId.value.toString())
+            notCurrentUserInfoUseCase(currentUserId.value ?: 0).data?.let {
+                if (it.isNotEmpty()) {
                     notCurrentAccounts.value = it
-                    hasOtherAccount = true
-                } ?: run {
-                    hasOtherAccount = false
+                    logger("有其他帐号")
+                    hasOtherAccount.value = true
+                } else {
+                    logger("没有其他帐号")
+                    hasOtherAccount.value = false
                 }
+            } ?: run {
+                hasOtherAccount.value = false
+                logger("没有其他帐号")
             }
         }
     }

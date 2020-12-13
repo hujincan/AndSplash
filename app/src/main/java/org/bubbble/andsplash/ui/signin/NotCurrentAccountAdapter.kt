@@ -21,6 +21,8 @@ class NotCurrentAccountAdapter(
 
     private var currentPosition = 0
 
+    lateinit var currentUserEntity: UserEntity
+
     class ViewHolder(private val binding: ItemUserAccountBinding) : RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: UserEntity, currentPosition: Int, onClick: (UserEntity, Int) -> Unit) {
             binding.authorIcon.setStrokeWidth(if (adapterPosition == currentPosition) {
@@ -56,11 +58,16 @@ class NotCurrentAccountAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if (currentPosition == 0 && currentPosition == position) {
+            currentItem(getItem(position))
+            currentUserEntity = getItem(position)
+        }
         holder.onBind(getItem(position), currentPosition, ::onClick)
     }
 
     private fun onClick(userEntity: UserEntity, position: Int) {
         currentItem(userEntity)
+        currentUserEntity = userEntity
         currentPosition = position
         notifyDataSetChanged()
     }
