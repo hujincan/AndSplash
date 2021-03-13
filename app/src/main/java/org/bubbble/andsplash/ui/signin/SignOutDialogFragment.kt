@@ -28,8 +28,6 @@ import org.bubbble.andsplash.ui.editor.EditUserActivity
 import org.bubbble.andsplash.ui.settings.SettingsActivity
 import org.bubbble.andsplash.util.CustomTabUtil
 import org.bubbble.andsplash.util.executeAfter
-import org.bubbble.andsplash.util.signin.SignInHandler
-import javax.inject.Inject
 
 
 /**
@@ -73,7 +71,9 @@ class SignOutDialogFragment : AppCompatDialogFragment() {
             }
 
             settings.setOnClickListener {
-                startActivity(Intent(context, SettingsActivity::class.java))
+//                startActivity(Intent(context, SettingsActivity::class.java))
+
+                logger("不应该是null了：${signInViewModel.currentUserInfo.value}")
             }
 
             addAccount.setOnClickListener {
@@ -94,6 +94,12 @@ class SignOutDialogFragment : AppCompatDialogFragment() {
                 } }
             }
 
+            removeAccount.setOnClickListener {
+                adapter.currentUserEntity.numeric_id?.let {
+                    activityViewModel.removeUser(it)
+                }
+            }
+
             signInViewModel.hasOtherAccount.observe(viewLifecycleOwner, {
                 if (it) {
                     accountList.visibility = View.VISIBLE
@@ -111,16 +117,25 @@ class SignOutDialogFragment : AppCompatDialogFragment() {
         signInViewModel.notCurrentAccounts.observe(this, {
             adapter.submitList(it)
         })
+
+        signInViewModel.currentUserInfo.observe(this, {
+            logger("有了")
+            binding.username.text = it.name
+            binding.email.text = it.email
+        })
+        logger("有吗：${signInViewModel.currentUserInfo.value}")
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         // 监听点击退出登录
+        signInViewModel.performSignInEvent.value?.getContentIfNotHandled()
         signInViewModel.performSignInEvent.observe(viewLifecycleOwner, { request ->
             if (request.peekContent() == SignInEvent.RequestSignOut) {
-                request.getContentIfNotHandled()
-                dismiss()
+                if (request.getContentIfNotHandled() != null) {
+                    dismiss()
+                }
             }
         })
 
@@ -135,16 +150,16 @@ class SignOutDialogFragment : AppCompatDialogFragment() {
     }
 }
 
-@BindingAdapter("username")
-fun setUsername(textView: TextView, userInfo: UserEntity) {
-    val displayName = userInfo.name
-    textView.text = displayName
-    textView.isGone = displayName.isNullOrEmpty()
-}
-
-@BindingAdapter("userEmail")
-fun setUserEmail(textView: TextView, userInfo: UserEntity) {
-    val email = userInfo.email
-    textView.text = email
-    textView.isGone = email.isNullOrEmpty()
-}
+//@BindingAdapter("username")
+//fun setUsername(textView: TextView, userInfo: UserEntity) {
+//    val displayName = userInfo.name
+//    textView.text = displayName
+//    textView.isGone = displayName.isNullOrEmpty()
+//}
+//
+//@BindingAdapter("userEmail")
+//fun setUserEmail(textView: TextView, userInfo: UserEntity) {
+//    val email = userInfo.email
+//    textView.text = email
+//    textView.isGone = email.isNullOrEmpty()
+//}

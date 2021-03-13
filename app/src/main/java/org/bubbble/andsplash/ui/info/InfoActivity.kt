@@ -26,23 +26,16 @@ class InfoActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
         binding = ActivityInfoBinding.inflate(layoutInflater)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            binding.photo.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-        }
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.title = "照片信息"
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val picture = intent.getIntExtra("photo", R.drawable.photo_3)
         binding.run {
-            photo.load(picture)
-
-            photo.setOnClickListener {
-                val intent = Intent(this@InfoActivity, PreviewActivity::class.java)
-                intent.putExtra("photo", picture)
-                startActivity(intent)
-            }
 
             val tags = arrayOf("design", "app", "app design", "food", "mobile", "ui", "food delivery app", "app", "app design", "food", "mobile", "ui", "food delivery app", "application", "food app", "mobile app", "mobile app design", "food delivery service")
             for (value in tags) {

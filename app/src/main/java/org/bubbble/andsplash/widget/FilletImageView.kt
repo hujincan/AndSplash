@@ -28,14 +28,14 @@ class FilletImageView(
     private var viewMatrix = Matrix()
     private var width = 0F
     private var height = 0F
-    private var radius = 10F.dp
+    private var radius = 8F.dp
     private var rectF: RectF
 
     init {
         paint.isAntiAlias = true
         rectF = RectF()
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.FilletImageView)
-        radius = typeArray.getDimension(R.styleable.FilletImageView_radius, 10F.dp)
+        radius = typeArray.getDimension(R.styleable.FilletImageView_radius, 8F.dp)
         typeArray.recycle()
     }
 

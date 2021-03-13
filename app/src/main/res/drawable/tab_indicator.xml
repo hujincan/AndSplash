@@ -20,8 +20,9 @@
     android:insetLeft="@dimen/margin_normal"
     android:insetRight="@dimen/margin_normal">
     <shape android:shape="rectangle">
-        <size android:height="2dp" />
-        <corners android:radius="1dp" />
+        <size android:height="2dp"/>
+        <padding android:left="6dp" android:right="6dp" />
+        <corners android:radius="2dp" />
         <solid android:color="?colorPrimary" />
     </shape>
 </inset>

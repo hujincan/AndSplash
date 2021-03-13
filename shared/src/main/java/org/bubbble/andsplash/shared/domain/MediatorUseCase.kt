@@ -28,18 +28,9 @@ import org.bubbble.andsplash.shared.util.logger
  */
 abstract class MediatorUseCase<in P, R> {
 
-    suspend operator fun invoke(parameters: P): Result<R> {
-        logger("先")
-        return try {
-            val request = execute(parameters)
-            if (request != null) {
-                Result.Success(request)
-            } else {
-                Result.Error("NoData")
-            }
-        } catch (e: Exception) {
-            Result.Error("${e.message}")
-        }
+    operator fun invoke(parameters: P): MediatorLiveData<Result<R>> {
+        execute(parameters)
+        return result
     }
 
     protected val result = MediatorLiveData<Result<R>>()
@@ -49,5 +40,5 @@ abstract class MediatorUseCase<in P, R> {
         return result
     }
 
-    abstract suspend fun execute(parameters: P): R
+    abstract fun execute(parameters: P)
 }

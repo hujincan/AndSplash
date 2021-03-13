@@ -15,7 +15,10 @@
     <string name="nav_album">图集</string>
     <string name="nav_personal">个人</string>
 
-    <string name="shot">镜头</string>
+    <string name="nav_photo">照片</string>
+
+    <string name="find_album">发现图集</string>
+    <string name="shot">照片</string>
     <string name="favorite">喜爱</string>
     <string name="user">用户</string>
 

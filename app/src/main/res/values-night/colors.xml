@@ -6,14 +6,18 @@
     <color name="carolina_blue">#8ab4f8</color> <!-- colorPrimary in Dark mode-->
     <color name="cornflower_blue">#669DF6</color> <!-- colorPrimaryDark in Dark mode-->
 
+    <color name="and_primary">#9656db</color>
+    <color name="and_primary_dark">#6328a9</color>
+    <color name="and_primary_light">#ffa9ff</color>
+
     <color name="teal">#069f86</color>
     <color name="bright_light_blue">#27e5fd</color>
     <color name="sun_yellow">#fcd230</color>
     <color name="bright_orange">#ff6c00</color>
 
 
-    <color name="color_primary">@color/carolina_blue</color>
-    <color name="color_primary_dark">@color/cornflower_blue</color>
+    <color name="color_primary">@color/and_primary_light</color>
+    <color name="color_primary_dark">@color/and_primary_light</color>
     <color name="color_on_secondary">@color/black</color>
 
     <color name="color_control_light">#2EFFFFFF</color> <!-- 18% white -->
@@ -36,4 +40,11 @@
     <color name="icon_tint">#9AA0A6</color>
 
     <item name="chip_bg_alpha_checked" format="float" type="dimen">0.27</item>
+
+
+    <color name="normal_gray_color">#9AA0A6</color>
+    <color name="text_color">#FFFFFF</color>
+    <color name="secondary_color">#B3FFFFFF</color>
+    <color name="disabled_color">#4DFFFFFF</color>
+
 </resources>

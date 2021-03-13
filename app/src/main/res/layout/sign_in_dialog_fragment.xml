@@ -86,6 +86,7 @@
             android:paddingEnd="@dimen/margin_small"
             android:clipToPadding="false"
             android:background="@drawable/top_divider"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/message" />
@@ -96,6 +97,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/margin_normal"
             android:paddingBottom="@dimen/margin_normal"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/account_list">
@@ -135,11 +137,11 @@
                 android:layout_height="wrap_content"
                 android:text="切换"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/remove"
+                app:layout_constraintEnd_toStartOf="@+id/remove_account"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/remove"
+                android:id="@+id/remove_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/margin_small"

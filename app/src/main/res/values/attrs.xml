@@ -119,4 +119,9 @@
         <attr name="fullscreenTextColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="SquareImageView">
+        <attr name="strokeWidth" />
+        <attr name="strokeColor" />
+    </declare-styleable>
+
 </resources>

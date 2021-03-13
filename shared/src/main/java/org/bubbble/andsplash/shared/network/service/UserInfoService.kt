@@ -2,14 +2,10 @@ package org.bubbble.andsplash.shared.network.service
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.bubbble.andsplash.model.AccessToken
-import org.bubbble.andsplash.model.user.UserInfo
-import org.bubbble.andsplash.shared.data.BuildConfig
+import org.bubbble.andsplash.model.user.MeInfo
 import org.bubbble.andsplash.shared.data.ConnectionURL
-import org.bubbble.andsplash.shared.network.api.AuthorizeApi
 import org.bubbble.andsplash.shared.network.api.UserApi
 import org.bubbble.andsplash.shared.network.interceptor.AuthInterceptor
-import org.bubbble.andsplash.shared.util.PreferencesUtil
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -35,5 +31,5 @@ class UserInfoService (
         .build()
         .create(UserApi::class.java)
 
-    suspend fun requestUserInfo (): Response<UserInfo> = api.getUserInfo()
+    suspend fun requestUserInfo (): Response<MeInfo> = api.getMeInfo()
 }

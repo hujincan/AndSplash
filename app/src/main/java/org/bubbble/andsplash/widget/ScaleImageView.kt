@@ -25,7 +25,8 @@ class ScaleImageView(
     // 比例值
     companion object {
         const val X = 4
-        const val Y = 3
+        const val Y = 4
+        /*  / X * Y */
     }
 
     private var width = 0F
@@ -35,7 +36,7 @@ class ScaleImageView(
         // ceil not round - avoid thin vertical gaps along the left/right edges
         val width = MeasureSpec.getSize(widthMeasureSpec)
         // 高度根据使得图片的宽度充满屏幕计算而得
-        val height = width / X * Y
+        val height = width
         setMeasuredDimension(width, height)
         this.width = width.toFloat()
         this.height = height.toFloat()

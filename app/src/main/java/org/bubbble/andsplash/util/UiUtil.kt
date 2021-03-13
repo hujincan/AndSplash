@@ -2,6 +2,8 @@ package org.bubbble.andsplash.util
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.view.View
+import android.view.WindowInsets
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.DrawableCompat
 import org.bubbble.andsplash.R

@@ -14,6 +14,7 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import org.bubbble.andsplash.R
 import org.bubbble.andsplash.databinding.ActivitySearchBinding
+import org.bubbble.andsplash.ui.pictures.Page
 import org.bubbble.andsplash.ui.pictures.PictureFragment
 
 class SearchActivity : AppCompatActivity() {
@@ -94,9 +95,9 @@ class SearchActivity : AppCompatActivity() {
         )
 
         private val INFO_PAGES = arrayOf(
-            { PictureFragment() },
-            { PictureFragment() },
-            { PictureFragment() }
+            PictureFragment.newInstance(Page.HOME_PHOTO),
+            PictureFragment.newInstance(Page.HOME_COLLECTION),
+            PictureFragment.newInstance(Page.HOME_PHOTO)
         )
     }
 
@@ -109,7 +110,7 @@ class SearchActivity : AppCompatActivity() {
 
         override fun getCount() = INFO_PAGES.size
 
-        override fun getItem(position: Int) = INFO_PAGES[position]()
+        override fun getItem(position: Int) = INFO_PAGES[position]
 
         override fun getPageTitle(position: Int): CharSequence {
             return resources.getString(INFO_TITLES[position])

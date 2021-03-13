@@ -19,21 +19,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/nav_news"
+        android:id="@+id/popular_navigation"
         android:icon="@drawable/ic_nav_news"
-        android:title="@string/nav_news"
-        app:contentDescription="preview" />
+        android:title="@string/nav_photo"
+        app:contentDescription="@string/nav_photo" />
 
     <item
-        android:id="@+id/nav_album"
-        android:icon="@drawable/ic_nav_album"
-        android:title="@string/nav_album"
-        app:contentDescription="icons" />
-
-    <item
-        android:id="@+id/nav_personal"
+        android:id="@+id/personal_navigation"
         android:icon="@drawable/ic_nav_personal"
         android:title="@string/nav_personal"
-        app:contentDescription="apply" />
+        app:contentDescription="@string/nav_personal" />
 
 </menu>

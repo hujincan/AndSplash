@@ -9,6 +9,10 @@
     <color name="carolina_blue">#8ab4f8</color> <!-- colorPrimary in Dark mode-->
     <color name="cornflower_blue">#669DF6</color> <!-- colorPrimaryDark in Dark mode-->
 
+    <color name="and_primary">#4285F4</color>
+    <color name="and_primary_dark">#6328a9</color>
+    <color name="and_primary_light">#ffa9ff</color>
+
     <color name="teal">#069f86</color>
     <color name="bright_light_blue">#27e5fd</color>
     <color name="sun_yellow">#fcd230</color>
@@ -16,9 +20,9 @@
 
     <color name="white">#fff</color>
     <color name="black">#000</color>
-    <color name="transparent">#0fff</color>
-    <color name="color_primary">@color/deep_sky_blue</color>
-    <color name="color_primary_dark">@color/warm_blue</color>
+    <color name="transparent">#0000</color>
+    <color name="color_primary">@color/and_primary</color>
+    <color name="color_primary_dark">@color/and_primary</color>
     <color name="color_on_secondary">@color/white</color>
 
     <color name="color_control_light">#39000000</color> <!-- Same as textColorPrimary disabled -->
@@ -64,5 +68,10 @@
     <color name="light_blue_A200">#FF40C4FF</color>
     <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
+
+    <color name="normal_gray_color">#5F6368</color>
+    <color name="text_color">#DE000000</color>
+    <color name="secondary_color">#8A000000</color>
+    <color name="disabled_color">#42000000</color>
 
 </resources>

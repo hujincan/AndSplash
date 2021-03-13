@@ -7,10 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.bubbble.andsplash.R
-import org.bubbble.andsplash.databinding.ItemPhotoBinding
-import org.bubbble.andsplash.databinding.ItemPhotoFlowBinding
-import org.bubbble.andsplash.databinding.ItemPhotoGridBinding
-import org.bubbble.andsplash.databinding.ItemPhotoListBinding
+import org.bubbble.andsplash.databinding.*
 import org.bubbble.andsplash.util.load
 
 /**
@@ -19,13 +16,10 @@ import org.bubbble.andsplash.util.load
  */
 internal class PictureAdapter(private val onClick: ((personal: String?, picture: Int?) -> Unit)?) : ListAdapter<PictureItem, ViewHolder>(PictureDiffCallback) {
 
-    private val viewLayout = ViewType.FLOW
+    private var viewLayout = ViewType.PHOTO
 
-    enum class ViewType {
-        PHOTO,
-        GRID,
-        FLOW,
-        LIST
+    fun setViewType(viewType: ViewType) {
+        viewLayout = viewType
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,8 +37,16 @@ internal class PictureAdapter(private val onClick: ((personal: String?, picture:
                 ViewHolder.FlowViewHolder(ItemPhotoFlowBinding.inflate(layoutInflater, parent, false))
             }
 
+            R.layout.item_photo_flow2 -> {
+                ViewHolder.Flow2ViewHolder(ItemPhotoFlow2Binding.inflate(layoutInflater, parent, false))
+            }
+
             R.layout.item_photo_grid -> {
                 ViewHolder.GridViewHolder(ItemPhotoGridBinding.inflate(layoutInflater, parent, false))
+            }
+
+            R.layout.item_photo_gallery -> {
+                ViewHolder.GalleryViewHolder(ItemPhotoGalleryBinding.inflate(layoutInflater, parent, false))
             }
 
             else -> throw IllegalArgumentException("Invalid viewType")
@@ -68,14 +70,25 @@ internal class PictureAdapter(private val onClick: ((personal: String?, picture:
         if (holder is ViewHolder.FlowViewHolder) {
             holder.onBind(getItem(position), onClick)
         }
+
+        if (holder is ViewHolder.Flow2ViewHolder) {
+            holder.onBind(getItem(position), onClick)
+        }
+
+
+        if (holder is ViewHolder.GalleryViewHolder) {
+            holder.onBind(getItem(position), onClick)
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (viewLayout) {
             ViewType.GRID -> R.layout.item_photo_grid
             ViewType.FLOW -> R.layout.item_photo_flow
+            ViewType.FLOW2 -> R.layout.item_photo_flow2
             ViewType.LIST -> R.layout.item_photo_list
             ViewType.PHOTO -> R.layout.item_photo
+            ViewType.GALLERY -> R.layout.item_photo_gallery
         }
     }
 
@@ -93,9 +106,12 @@ internal sealed class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemVi
                 onClick?.invoke(null, data.data)
             }
 
+            binding.authorIcon.load(R.drawable.bush)
             binding.authorIcon.setOnClickListener {
                 onClick?.invoke("Ok", null)
             }
+
+            binding.authorName.text = "Andrew"
         }
     }
 
@@ -120,7 +136,32 @@ internal sealed class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemVi
         }
     }
 
+    class Flow2ViewHolder(private val binding: ItemPhotoFlow2Binding) : ViewHolder(binding.root) {
+        fun onBind(data: PictureItem, onClick: ((String?, Int?) -> Unit)?) {
+            binding.photosImage.load(data.data)
+            binding.photosImage.setOnClickListener {
+                onClick?.invoke(null, data.data)
+            }
+
+            binding.authorIcon.load(R.drawable.bush)
+            binding.authorIcon.setOnClickListener {
+                onClick?.invoke("Ok", null)
+            }
+
+            binding.authorName.text = "Andrew"
+        }
+    }
+
     class GridViewHolder(private val binding: ItemPhotoGridBinding) : ViewHolder(binding.root)  {
+        fun onBind(data: PictureItem, onClick: ((String?, Int?) -> Unit)?) {
+            binding.photosImage.load(data.data)
+            binding.photosImage.setOnClickListener {
+                onClick?.invoke(null, data.data)
+            }
+        }
+    }
+
+    class GalleryViewHolder(private val binding: ItemPhotoGalleryBinding) : ViewHolder(binding.root)  {
         fun onBind(data: PictureItem, onClick: ((String?, Int?) -> Unit)?) {
             binding.photosImage.load(data.data)
             binding.photosImage.setOnClickListener {
@@ -132,10 +173,10 @@ internal sealed class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemVi
 
 object PictureDiffCallback : DiffUtil.ItemCallback<PictureItem>() {
     override fun areItemsTheSame(oldItem: PictureItem, newItem: PictureItem): Boolean {
-        return oldItem.data == newItem.data
+        return oldItem.data != newItem.data
     }
 
     override fun areContentsTheSame(oldItem: PictureItem, newItem: PictureItem): Boolean {
-        return oldItem.data == newItem.data
+        return oldItem.data != newItem.data
     }
 }

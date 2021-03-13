@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase
  */
 
 @Database(
-    entities = [UserEntity::class],
+    entities = [UserEntity::class, PhotoEntity::class],
     version = 1,
     exportSchema = false
 )
@@ -19,6 +19,7 @@ import androidx.room.RoomDatabase
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
+    abstract fun photoDao(): PhotoDao
 
     companion object {
         private const val databaseName = "andsplash-db"

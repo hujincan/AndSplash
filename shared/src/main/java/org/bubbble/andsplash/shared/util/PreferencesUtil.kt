@@ -12,10 +12,6 @@ class PreferencesUtil @Inject constructor(
     @ApplicationContext val context: Context
 ) {
 
-    init {
-        logger("PreferencesUtil：初始化了一次！！！！")
-    }
-
     fun <T> put(key: String, value: T) {
         val mShareConfig = PreferenceManager.getDefaultSharedPreferences(context)
         put(mShareConfig, key, value)

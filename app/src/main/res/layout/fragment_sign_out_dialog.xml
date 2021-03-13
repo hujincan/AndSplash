@@ -49,16 +49,14 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:textAppearance="@style/TextAppearance.IOSched.AccountDialog.Username"
-                tools:text="User Name"
-                app:username="@{viewModel.currentUserInfo}" />
+                tools:text="User Name" />
 
             <TextView
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="1"
-                tools:text="user@email.com"
-                app:userEmail="@{viewModel.currentUserInfo}" />
+                tools:text="user@email.com" />
 
         </LinearLayout>
 
@@ -71,7 +69,7 @@
             app:layout_constraintStart_toEndOf="@id/guideline_start"
             app:layout_constraintTop_toTopOf="parent"
             app:clipToCircle="@{true}"
-            app:imageUri="@{viewModel.currentUserImageUri}"
+            app:imageUri="@{viewModel.currentUserInfo.profile_image}"
             app:placeholder="@{@drawable/ic_default_profile_avatar}"
             tools:src="@drawable/ic_default_profile_avatar" />
 
@@ -169,11 +167,11 @@
                 android:layout_height="wrap_content"
                 android:text="切换"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/remove"
+                app:layout_constraintEnd_toStartOf="@+id/remove_account"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/remove"
+                android:id="@+id/remove_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/margin_small"

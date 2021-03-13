@@ -6,6 +6,8 @@ import org.bubbble.andsplash.model.AccessToken
 import org.bubbble.andsplash.shared.data.BuildConfig
 import org.bubbble.andsplash.shared.data.ConnectionURL
 import org.bubbble.andsplash.shared.network.api.AuthorizeApi
+import org.bubbble.andsplash.shared.network.interceptor.NapiInterceptor
+import org.bubbble.andsplash.shared.util.logger
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

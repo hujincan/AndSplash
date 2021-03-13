@@ -23,13 +23,8 @@ class MainActivityViewModel @ViewModelInject constructor(
     val navigateToSignOutDialogAction: LiveData<Event<Unit>>
         get() = _navigateToSignOutDialogAction
 
-    val userInfoResult: LiveData<UserEntity?>
-
     init {
-        userInfoResult = handleSignInResult()
-        viewModelScope.launch {
-            updateUserInfo(null)
-        }
+        updateUserInfo(viewModelScope)
     }
 
     fun onProfileClicked() {
@@ -42,19 +37,25 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     fun signOut() {
         viewModelScope.launch {
-            onSignOut()
+            onSignOut(viewModelScope)
         }
     }
 
     fun switchUser(currentUserId: Int, accessToken: String) {
         viewModelScope.launch {
-            switchUserInfo(currentUserId, accessToken)
+            switchUserInfo(currentUserId, accessToken, viewModelScope)
         }
     }
 
-    fun signIn(code: String?) {
+    fun removeUser(currentUserId: Int) {
         viewModelScope.launch {
-            updateUserInfo(code)
+            removeUserInfo(currentUserId, viewModelScope)
+        }
+    }
+
+    fun signIn(code: String) {
+        viewModelScope.launch {
+            setUserInfo(code, viewModelScope)
         }
     }
 }

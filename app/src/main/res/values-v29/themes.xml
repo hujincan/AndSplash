@@ -23,4 +23,5 @@
         <item name="android:navigationBarColor">@color/transparent</item>
         <item name="ioschedNavigationBarDividerColor">@color/transparent</item>
     </style>
+
 </resources>

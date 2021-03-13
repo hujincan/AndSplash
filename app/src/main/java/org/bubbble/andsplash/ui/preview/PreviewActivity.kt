@@ -1,27 +1,25 @@
 package org.bubbble.andsplash.ui.preview
 
-import androidx.appcompat.app.AppCompatActivity
 import android.annotation.SuppressLint
-import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.os.Build
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.MotionEvent
+import android.view.ContextMenu
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
-import android.widget.Button
-import android.widget.Toast
-import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.updatePadding
+import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.bubbble.andsplash.R
 import org.bubbble.andsplash.databinding.ActivityPreviewBinding
-import org.bubbble.andsplash.util.UnboundedImageViewHelper
+import org.bubbble.andsplash.ui.info.InfoActivity
+import org.bubbble.andsplash.ui.pictures.PictureItem
+import org.bubbble.andsplash.util.doOnApplyWindowInsets
 import org.bubbble.andsplash.util.load
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -30,26 +28,22 @@ import org.bubbble.andsplash.util.load
 class PreviewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPreviewBinding
+    private var picture = R.drawable.photo_3
 
     private val hideHandler = Handler(Looper.getMainLooper())
 
     @SuppressLint("InlinedApi")
     private val hidePart2Runnable = Runnable {
-
-//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or
-//                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-//                View.SYSTEM_UI_FLAG_IMMERSIVE or
-//                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                View.SYSTEM_UI_FLAG_IMMERSIVE or
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-
+        window.decorView.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+            View.SYSTEM_UI_FLAG_FULLSCREEN or
+            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        actionBar?.hide()
     }
+
     private val showPart2Runnable = Runnable {
         // Delayed display of UI elements
         binding.actionBar.visibility = View.VISIBLE
@@ -61,10 +55,6 @@ class PreviewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-
         super.onCreate(savedInstanceState)
         binding = ActivityPreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -73,14 +63,44 @@ class PreviewActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val picture = intent.getIntExtra("photo", R.drawable.photo_3)
+        picture = intent.getIntExtra("photo", R.drawable.photo_3)
         binding.run {
-            photo.load(picture)
-            photo.setOnClickListener {
+            photoList.setOnClickListener {
                 toggle()
             }
         }
+        initView()
     }
+
+    private fun initView() {
+        val photoAdapter = PreviewAdapter(PreviewAdapter.PreviewViewType.PHOTO)
+        val thumbnailAdapter = PreviewAdapter(PreviewAdapter.PreviewViewType.THUMBNAIL)
+        val photos = mutableListOf<PictureItem>().apply {
+            add(PictureItem(R.drawable.photo_3))
+            add(PictureItem(R.drawable.photo_4))
+            add(PictureItem(R.drawable.photo_8))
+            add(PictureItem(R.drawable.photo_9))
+            add(PictureItem(R.drawable.photo_10))
+            add(PictureItem(R.drawable.photo_11))
+            add(PictureItem(R.drawable.photo_12))
+            add(PictureItem(R.drawable.photo_13))
+            add(PictureItem(R.drawable.photo_14))
+            add(PictureItem(R.drawable.photo_5))
+            add(PictureItem(R.drawable.photo_6))
+            add(PictureItem(R.drawable.photo_7))
+            add(PictureItem(R.drawable.photo_1))
+            add(PictureItem(R.drawable.photo_2))
+        }
+        binding.thumbnailList.run {
+            layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = thumbnailAdapter
+        }
+        binding.photoList.adapter = photoAdapter
+        thumbnailAdapter.submitList(photos)
+        photoAdapter.submitList(photos)
+
+    }
+
 
     private fun toggle() {
         if (isFullscreen) {
@@ -113,32 +133,56 @@ class PreviewActivity : AppCompatActivity() {
         hideHandler.postDelayed(showPart2Runnable, UI_ANIMATION_DELAY.toLong())
     }
 
-    /**
-     * Schedules a call to hide() in [delayMillis], canceling any
-     * previously scheduled calls.
-     */
-    private fun delayedHide(delayMillis: Int) {
-        hideHandler.removeCallbacks(hideRunnable)
-        hideHandler.postDelayed(hideRunnable, delayMillis.toLong())
-    }
-
     companion object {
-        /**
-         * Whether or not the system UI should be auto-hidden after
-         * [AUTO_HIDE_DELAY_MILLIS] milliseconds.
-         */
-        private const val AUTO_HIDE = true
-
-        /**
-         * If [AUTO_HIDE] is set, the number of milliseconds to wait after
-         * user interaction before hiding the system UI.
-         */
-        private const val AUTO_HIDE_DELAY_MILLIS = 3000
-
         /**
          * Some older devices needs a small delay between UI widget updates
          * and a change of the status and navigation bar.
          */
         private const val UI_ANIMATION_DELAY = 100
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_preview, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_info -> {
+                val intent = Intent(this, InfoActivity::class.java)
+                intent.putExtra("photo", picture)
+                startActivity(intent)
+            }
+        }
+        return true
+    }
+}
+
+@BindingAdapter(
+    "paddingLeftSystemWindowInsets",
+    "paddingTopSystemWindowInsets",
+    "paddingRightSystemWindowInsets",
+    "paddingBottomSystemWindowInsets",
+    requireAll = false
+)
+fun applySystemWindows(
+    view: View,
+    applyLeft: Boolean,
+    applyTop: Boolean,
+    applyRight: Boolean,
+    applyBottom: Boolean
+) {
+    view.doOnApplyWindowInsets { view, insets, padding ->
+        val left = if (applyLeft) insets.systemWindowInsetLeft else 0
+        val top = if (applyTop) insets.systemWindowInsetTop else 0
+        val right = if (applyRight) insets.systemWindowInsetRight else 0
+        val bottom = if (applyBottom) insets.systemWindowInsetBottom else 0
+
+        view.setPadding(
+            padding.left + left,
+            padding.top + top,
+            padding.right + right,
+            padding.bottom + bottom
+        )
     }
 }

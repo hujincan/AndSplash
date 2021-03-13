@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="fab_margin">16dp</dimen>
 
     <!-- Common dimensions -->
@@ -113,4 +113,5 @@
     <dimen name="status_bar_height">0dp</dimen>
 
     <dimen name="top_padding">74dp</dimen>
+
 </resources>

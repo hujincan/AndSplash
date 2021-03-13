@@ -18,10 +18,13 @@ data class UserEntity (
     val location: String?,
     val profile_image: String?,
     val instagram_username: String?,
+    val portfolio_url: String?,
+    val bio: String?,
     val total_collections: Int?,
     val total_likes: Int?,
     val total_photos: Int?,
     val email: String?,
+    val downloads: Int?,
     val access_token: String?
 ) {
     companion object {
@@ -34,10 +37,13 @@ data class UserEntity (
             null,
             null,
             null,
+            null,
+            null,
             0,
             0,
             0,
             "请先登录",
+            0,
             null
         )
     }

@@ -63,6 +63,12 @@ class SignInDialogFragment : AppCompatDialogFragment() {
                 } }
             }
 
+            removeAccount.setOnClickListener {
+                adapter.currentUserEntity.numeric_id?.let {
+                    activityViewModel.removeUser(it)
+                }
+            }
+
             signInViewModel.hasOtherAccount.observe(viewLifecycleOwner, {
                 if (it) {
                     accountList.visibility = View.VISIBLE

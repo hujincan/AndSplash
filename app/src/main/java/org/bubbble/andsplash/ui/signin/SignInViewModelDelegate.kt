@@ -3,6 +3,7 @@ package org.bubbble.andsplash.ui.signin
 import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
 import org.bubbble.andsplash.shared.data.db.UserEntity
 import org.bubbble.andsplash.shared.domain.auth.UserAuthSaveUseCase
 import org.bubbble.andsplash.shared.domain.user.UserInfoUpdateUseCase
@@ -25,25 +26,23 @@ interface SignInViewModelDelegate {
 
     val currentUserInfo: LiveData<UserEntity>
 
-    val currentUserId: LiveData<Int>
-
-    val currentUserImageUri: LiveData<String?>
-
     fun isSignedIn(): Boolean
 
-    fun handleSignInResult(): LiveData<UserEntity?>
+    suspend fun setUserInfo(code: String, viewModelScope: CoroutineScope)
 
-    suspend fun updateUserInfo(code: String?)
+    fun updateUserInfo(viewModelScope: CoroutineScope)
 
     fun onSignIn()
 
-    suspend fun onSignOut()
+    suspend fun onSignOut(viewModelScope: CoroutineScope)
 
     fun observeSignedInUser(): LiveData<Boolean>
 
     val performSignInEvent: MutableLiveData<Event<SignInEvent>>
 
-    suspend fun switchUserInfo(currentUserId: Int, accessToken: String)
+    suspend fun switchUserInfo(currentUserId: Int, accessToken: String, viewModelScope: CoroutineScope)
+
+    suspend fun removeUserInfo(currentUserId: Int, viewModelScope: CoroutineScope)
 }
 
 /**
@@ -55,61 +54,64 @@ internal class UnsplashSignInViewModelDelegate @Inject constructor(
     @ApplicationContext val context: Context
 ) : SignInViewModelDelegate {
 
-    private val _currentUserInfo = MutableLiveData<UserEntity>()
+    private val _currentUserInfo: LiveData<UserEntity>
     override val currentUserInfo: LiveData<UserEntity>
         get() = _currentUserInfo
 
-    private val _currentUserId = MutableLiveData<Int>()
-    override val currentUserId: LiveData<Int>
-        get() = _currentUserId
-
-    private val _currentUserImageUri = MutableLiveData<String?>()
-    override val currentUserImageUri: LiveData<String?>
-        get() = _currentUserImageUri
-
-    override fun handleSignInResult(): LiveData<UserEntity?> {
-
-        return userInfoUpdateUseCase.observe().map {
-            (it as? Result.Success)?.data
+    init {
+        _currentUserInfo = userInfoUpdateUseCase.observe().map {
+            val result = (it as? Result.Success)?.data ?: UserEntity.getDefault()
+            _currentIsSignedIn.value = result.numeric_id != null
+            result
         }
     }
 
-    override suspend fun updateUserInfo(code: String?) {
+    override suspend fun setUserInfo(code: String, viewModelScope: CoroutineScope) {
         // 如果code不是null 并且 正确拿到token。则更新用户数据
-        if (code != null && userAuthSaveUseCase(code).data != true) {
+        if (userAuthSaveUseCase(code).data == false) {
             _currentIsSignedIn.value = false
-            return
+        } else {
+            logger("有执行")
+            updateUserInfo(viewModelScope)
         }
+    }
 
-        userInfoUpdateUseCase(Unit).data?.let {
-            _currentUserInfo.value = it
-            _currentUserImageUri.value = it.profile_image
-            _currentIsSignedIn.value = it.numeric_id != null
-            _currentUserId.value = it.numeric_id
-        }
+    override fun updateUserInfo(viewModelScope: CoroutineScope) {
+        userInfoUpdateUseCase(viewModelScope)
     }
 
     override val performSignInEvent = MutableLiveData<Event<SignInEvent>>()
 
-    override suspend fun switchUserInfo(currentUserId: Int, accessToken: String) {
+    override suspend fun switchUserInfo(currentUserId: Int, accessToken: String, viewModelScope: CoroutineScope) {
         userInfoUpdateUseCase.switchAccount(currentUserId, accessToken)
-        updateUserInfo(null)
+        updateUserInfo(viewModelScope)
+    }
+
+    override suspend fun removeUserInfo(
+        currentUserId: Int,
+        viewModelScope: CoroutineScope
+    ) {
+        userInfoUpdateUseCase.removeAccount(currentUserId)
+        updateUserInfo(viewModelScope)
     }
 
     override fun onSignIn() {
         performSignInEvent.value = Event(SignInEvent.RequestSignIn)
     }
 
-    override suspend fun onSignOut() {
-        currentUserId.value?.let {
-            performSignInEvent.value = Event(SignInEvent.RequestSignOut)
-            userInfoUpdateUseCase.signOut(it)
+    override suspend fun onSignOut(viewModelScope: CoroutineScope) {
+        currentUserInfo.value?.let {
+            it.numeric_id?.let { numeric_id ->
+                performSignInEvent.value = Event(SignInEvent.RequestSignOut)
+                userInfoUpdateUseCase.signOutAccount(numeric_id)
+                _currentIsSignedIn.value = false
+                updateUserInfo(viewModelScope)
+            }
         }
-        _currentIsSignedIn.value = false
-        updateUserInfo(null)
     }
 
     private val _currentIsSignedIn = MutableLiveData<Boolean>()
+
     private val isSignedIn: LiveData<Boolean>
         get() = _currentIsSignedIn
 

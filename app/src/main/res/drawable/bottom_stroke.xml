@@ -10,8 +10,8 @@
     <item android:gravity="bottom">
         <shape>
             <size
-                android:height="1dp" />
-            <solid android:color="@color/list_divider" />
+                android:height="4px" />
+            <solid android:color="@color/stroke_color" />
         </shape>
     </item>
 

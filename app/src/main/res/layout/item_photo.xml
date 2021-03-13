@@ -5,20 +5,25 @@
     android:id="@+id/shot_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="18dp"
+    android:paddingStart="@dimen/margin_small"
+    android:paddingEnd="@dimen/margin_small">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="6dp">
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:gravity="center_vertical">
 
         <org.bubbble.andsplash.widget.CircleImageView
             android:id="@+id/author_icon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
             android:src="@drawable/ic_default_profile_avatar"/>
 
         <TextView
@@ -26,17 +31,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingStart="@dimen/margin_normal"
-            android:paddingEnd="@dimen/margin_normal"
-            android:textSize="16sp"
-            android:text="阿瑶"
-            style="@style/TextAppearance.IOSched.Body2"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/margin_normal"
-            android:src="@drawable/ic_more"/>
+            android:padding="@dimen/margin_small"
+            android:textSize="15sp"
+            android:textColor="@color/text_color"
+            android:text="阿瑶"/>
 
     </LinearLayout>
 
@@ -44,10 +42,7 @@
         android:id="@+id/photos_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_normal"
-        android:layout_marginStart="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_small"
         android:adjustViewBounds="true"
-        tools:src="@drawable/photo_3"/>
+        tools:src="@drawable/photo_3" />
 
 </LinearLayout>

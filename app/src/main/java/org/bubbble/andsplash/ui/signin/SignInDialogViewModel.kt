@@ -24,10 +24,10 @@ class SignInDialogViewModel @ViewModelInject constructor(
 
     val hasOtherAccount = MutableLiveData<Boolean>()
 
-    private val observer = Observer<Int> {
+    private val observer = Observer<UserEntity> {
         viewModelScope.launch {
-            logger(currentUserId.value.toString())
-            notCurrentUserInfoUseCase(currentUserId.value ?: 0).data?.let {
+            logger(it.numeric_id.toString())
+            notCurrentUserInfoUseCase(it.numeric_id ?: 0).data?.let {
                 if (it.isNotEmpty()) {
                     notCurrentAccounts.value = it
                     logger("有其他帐号")
@@ -44,7 +44,8 @@ class SignInDialogViewModel @ViewModelInject constructor(
     }
 
     init {
-        currentUserId.observeForever(observer)
+        currentUserInfo.observeForever(observer)
+        logger("currentUserInfo ： ${currentUserInfo.value}")
     }
 
     val notCurrentAccounts: MutableLiveData<List<UserEntity>> by lazy {
@@ -52,7 +53,7 @@ class SignInDialogViewModel @ViewModelInject constructor(
     }
 
     override fun onCleared() {
-        currentUserId.removeObserver(observer)
+        currentUserInfo.removeObserver(observer)
         super.onCleared()
     }
 }

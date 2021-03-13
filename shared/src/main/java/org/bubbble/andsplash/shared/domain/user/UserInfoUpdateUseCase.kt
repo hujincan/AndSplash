@@ -1,6 +1,8 @@
 package org.bubbble.andsplash.shared.domain.user
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.bubbble.andsplash.shared.data.db.UserEntity
 import org.bubbble.andsplash.shared.data.user.UserDataRepository
@@ -17,25 +19,33 @@ import javax.inject.Inject
 class UserInfoUpdateUseCase @Inject constructor(
     private val repository: UserDataRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
-) : MediatorUseCase<Unit, UserEntity>() {
+) : MediatorUseCase<CoroutineScope, UserEntity>() {
 
-    override suspend fun execute(parameters: Unit): UserEntity {
+    override fun execute(parameters: CoroutineScope) {
         try {
-            val request = repository.getUserInfo()
-            result.addSource(request) {
-                result.postValue(Result.Success(it))
+            result.removeSource(repository.observerResult)
+            result.addSource(repository.observerResult) {
+                result.value = Result.Success(it)
             }
-            return request.value ?: UserEntity.getDefault()
-        } catch (e: Exception) {
-            result.postValue(Result.Error("${e.message}"))
-        }
 
-        return UserEntity.getDefault()
+            parameters.launch {
+                repository.getUserInfo()
+            }
+        } catch (e: Exception) {
+            logger(e.message)
+            result.value = Result.Error("${e.message}")
+        }
     }
 
-    suspend fun signOut(currentUserId: Int) {
+    suspend fun removeAccount(currentUserId: Int) {
         withContext(dispatcher) {
             repository.removeUserInfo(currentUserId)
+        }
+    }
+
+    suspend fun signOutAccount(currentUserId: Int) {
+        withContext(dispatcher) {
+            repository.signOutUserInfo(currentUserId)
         }
     }
 
